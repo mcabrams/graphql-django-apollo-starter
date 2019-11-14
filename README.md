@@ -1,5 +1,7 @@
-# Doppelganger
-> TODO
+# Graphql Django Apollo Starter
+
+Create a new repo based off of this.  Enable renovatebot, and add project to
+CircleCI.  Do a grep for doppelganger and replace with desired app name.
 
 ## Development Setup
 
