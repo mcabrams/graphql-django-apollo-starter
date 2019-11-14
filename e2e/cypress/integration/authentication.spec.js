@@ -84,7 +84,7 @@ describe('authentication', () => {
     const email = 'foo2@example.com';
 
     // Visit protected route
-    cy.get('[data-testid=quiz-nav-link]')
+    cy.get('[data-testid=protected-route-nav-link]')
       .click();
 
     cy.url()
@@ -100,6 +100,6 @@ describe('authentication', () => {
       .click();
 
     cy.url()
-      .should('eq', Cypress.config().baseUrl + '/quiz');
+      .should('eq', Cypress.config().baseUrl + '/protected');
   });
 });
