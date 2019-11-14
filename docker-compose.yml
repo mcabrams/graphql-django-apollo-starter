@@ -1,0 +1,60 @@
+version: '3'
+
+services:
+
+  client:
+    build:
+      # Context is this directory instead of ./client because Dockerfile
+      # needs to copy schema.graphql file which is located in ./server
+      context: .
+      dockerfile: ./client/Dockerfile.local
+    command: npm run start
+    volumes:
+      - ./client:/app
+      - /app/node_modules
+      - ./server/schema:/app/schema # Need to keep schema up to date based off of server
+      - /app/build
+      - /app/public
+    tty: true
+    stdin_open: true
+    ports:
+      - 8080:8080
+
+  server:
+    build:
+      context: ./server
+    command:
+      - /bin/bash
+      - -c
+      - |
+        ./wait-for.sh database:5432
+        python manage.py migrate
+        python manage.py graphql_schema
+        python manage.py runserver 0.0.0.0:8000
+    depends_on:
+      - database
+    volumes:
+      - ./server:/app
+    environment:
+      DATABASE_URL: postgresql://postgresadmin:admin123@database:5432/postgresdb
+      DJANGO_ALLOWED_HOSTS: localhost,server
+      DJANGO_CORS_ORIGIN_WHITELIST: http://localhost:8080,http://client:8080
+      DJANGO_TRUSTED_ORIGINS: http://localhost:8080,http://client:8080
+    tty: true
+    stdin_open: true
+    ports:
+      - 8000:8000
+
+  database:
+    image: 'postgres:10.10'
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_DB: postgresdb
+      POSTGRES_USER: postgresadmin
+      POSTGRES_PASSWORD: admin123
+    volumes:
+    - postgres:/var/lib/postgresql/data
+
+volumes:
+  postgres: ~

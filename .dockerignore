@@ -1,0 +1,7 @@
+# This dockerignore is here rather than client/ because docker-compose.yml context
+# depends on this directory, not client/
+# As a result, some paths are listed as **/ because they may be in client, and in cases specific to client we prefix client/
+.dockerignore
+**/node_modules
+**/generated
+client/schema/schema.json

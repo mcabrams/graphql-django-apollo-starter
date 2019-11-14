@@ -1,0 +1,14 @@
+schema: ./schema/schema.json
+generates:
+  ./src/generated/graphql.tsx:
+    documents: ./src/queries/*.ts
+    plugins:
+      - add: "/* THIS IS A GENERATED FILE - DO NOT MODIFY */"
+      - typescript
+      - typescript-operations
+      - typescript-react-apollo
+    config:
+      withComponent: false
+      withHooks: true
+      withHOC: false
+overwrite: true
