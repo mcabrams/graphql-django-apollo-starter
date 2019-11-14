@@ -1,18 +1,10 @@
 const USERNAME_EMAIL_PASSWORD_MAP = {
   superuser: {
-    email: 'foobar@example.com',
+    email: 'superuser@example.com',
     password: 'foobar1234',
   },
-  userWithDoppelganger: {
-    email:  'userWithDoppelganger@example.com',
-    password: 'foobar1234',
-  },
-  doppelganger: {
-    email: 'doppelganger@example.com',
-    password: 'foobar1234',
-  },
-  noAnsweredQuestions: {
-    email: 'noAnsweredQuestions@example.com',
+  normalUser: {
+    email:  'normalUser@example.com',
     password: 'foobar1234',
   },
 };
