@@ -36,9 +36,7 @@ ALLOWED_HOSTS = env.list('DJANGO_ALLOWED_HOSTS')
 
 INSTALLED_APPS = [
     # User defined apps go here
-    'comparison.apps.ComparisonConfig',
     'helpers.apps.HelpersConfig',
-    'question.apps.QuestionConfig',
     'user.apps.UserConfig',
     'user_profile.apps.UserProfileConfig',
     # Django defaults

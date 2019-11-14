@@ -16,11 +16,13 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from graphene_django.views import GraphQLView
+from graphene_django.views import (
+    GraphQLView as GrapheneDjangoGraphQLView,
+)
 from graphql_jwt.decorators import jwt_cookie
 
 
-class DoppelgangerGraphQLView(GraphQLView):
+class GraphQLView(GrapheneDjangoGraphQLView):
     def dispatch(self, request, *args, **kwargs):
         response = super().dispatch(request, *args, **kwargs)
         response = self._delete_cookies_on_response_if_needed(request, response)
@@ -38,5 +40,5 @@ class DoppelgangerGraphQLView(GraphQLView):
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('graphql', jwt_cookie(DoppelgangerGraphQLView.as_view(graphiql=True))),
+    path('graphql', jwt_cookie(GraphQLView.as_view(graphiql=True))),
 ]

@@ -10,9 +10,3 @@ class UserProfile(TimeStampedModel):
         on_delete=models.CASCADE,
         related_name='profile',
     )
-
-    def answers(self):
-        return self.answered_questions.answers()
-
-    def questions(self):
-        return self.answered_questions.questions()

@@ -1,14 +1,10 @@
 import graphene
 import graphql_jwt
 
-import comparison.schema
-import question.schema
 import user.schema
 
 
 class Query(
-    comparison.schema.Query,
-    question.schema.Query,
     user.schema.Query,
     graphene.ObjectType,
 ):
@@ -18,7 +14,6 @@ class Query(
 
 
 class Mutation(
-    question.schema.Mutation,
     user.schema.Mutation,
     graphene.ObjectType,
 ):
