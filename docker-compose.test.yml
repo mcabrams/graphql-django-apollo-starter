@@ -37,6 +37,7 @@ services:
         python manage.py runserver 0.0.0.0:8001
     depends_on:
       - database
+      - redis
     volumes:
       - ./server:/app
       - /app/schema/  # Don't want to overwrite what's generated via
@@ -46,6 +47,7 @@ services:
       DJANGO_ALLOWED_HOSTS: localhost,server-test
       DJANGO_CORS_ORIGIN_WHITELIST: http://localhost:8081,http://client-test:8080
       DJANGO_TRUSTED_ORIGINS: http://localhost:8081,http://client-test:8080
+      REDIS_URL: redis://redis:6379/0
       DJANGO_DISABLE_CSRF: 'True'
     tty: true
     stdin_open: true

@@ -33,6 +33,7 @@ services:
         python manage.py runserver 0.0.0.0:8000
     depends_on:
       - database
+      - redis
     volumes:
       - ./server:/app
     environment:
@@ -40,10 +41,19 @@ services:
       DJANGO_ALLOWED_HOSTS: localhost,server
       DJANGO_CORS_ORIGIN_WHITELIST: http://localhost:8080,http://client:8080
       DJANGO_TRUSTED_ORIGINS: http://localhost:8080,http://client:8080
+      REDIS_URL: redis://redis:6379/0
     tty: true
     stdin_open: true
     ports:
       - 8000:8000
+
+  redis:
+    restart: always
+    image: 'redis:5.0.6'
+    ports:
+      - 6379:6379
+    volumes:
+      - redisdata:/data
 
   database:
     image: 'postgres:10.11'
@@ -58,3 +68,4 @@ services:
 
 volumes:
   postgres: ~
+  redisdata: ~

@@ -68,10 +68,15 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'doppelganger.urls'
 
+# (/app/doppelganger/settings.py - 2 = /app/)
+ROOT_DIR = environ.Path(__file__) - 2
+APPS_DIR = ROOT_DIR.path('doppelganger')
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            str(ROOT_DIR.path('templates')),
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -135,6 +140,28 @@ STATIC_URL = '/static/'
 
 
 # User defined settings here
+
+# CACHES
+# ------------------------------------------------------------------------------
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": env("REDIS_URL"),
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            # Mimicing memcache behavior.
+            # http://niwinz.github.io/django-redis/latest/#_memcached_exceptions_behavior
+            "IGNORE_EXCEPTIONS": True,
+        },
+    }
+}
+
+# Cache time to live is 10 minutes.
+CACHE_TTL = 60 * 10
+
+SESSION_ENGINE = "django.contrib.sessions.backends.cache"
+SESSION_CACHE_ALIAS = "default"
+
 GRAPHENE = {
     'SCHEMA': 'doppelganger.schema.schema',
     'SCHEMA_OUTPUT': 'schema/schema.json',
