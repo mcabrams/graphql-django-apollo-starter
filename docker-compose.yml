@@ -63,6 +63,14 @@ services:
     env_file:
       - ./server/.env
 
+  flower:
+    image: mher/flower
+    environment:
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - FLOWER_PORT=8888
+    ports:
+      - 8888:8888
+
   database:
     image: 'postgres:10.11'
     ports:
