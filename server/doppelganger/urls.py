@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.conf import settings
-from django.urls import path
+from django.urls import include, path
 from django.views.decorators.cache import cache_page
 from django.views.generic import TemplateView
 
@@ -49,3 +49,9 @@ urlpatterns = [
         content_type='text/plain',
     ))),
 ]
+
+if settings.DEBUG:
+    import debug_toolbar
+    urlpatterns = [
+        path('__debug__/', include(debug_toolbar.urls)),
+    ] + urlpatterns

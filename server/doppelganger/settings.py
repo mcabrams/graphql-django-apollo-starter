@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 from datetime import timedelta
 import environ
 import os
+import socket
 
 env = environ.Env()
 
@@ -48,12 +49,14 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # 3rd party apps
     'corsheaders',
+    'debug_toolbar',
     'django_extensions',
     'graphene_django',
     'graphql_jwt.refresh_token.apps.RefreshTokenConfig',
 ]
 
 MIDDLEWARE = [
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     # 3rd party cors middleware
@@ -138,8 +141,12 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-
 # User defined settings here
+INTERNAL_IPS = []
+
+# tricks to have debug toolbar when developing with docker
+ip = socket.gethostbyname(socket.gethostname())
+INTERNAL_IPS += [ip[:-1] + '1']
 
 # CACHES
 # ------------------------------------------------------------------------------
