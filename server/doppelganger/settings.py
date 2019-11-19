@@ -30,7 +30,7 @@ SECRET_KEY = '68#q3crazgl=q2@0=egv&_zsgr))n5wp2$zst#6k9nxh*b^241'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = env.list('DJANGO_ALLOWED_HOSTS')
+ALLOWED_HOSTS = env.list('DJANGO_ALLOWED_HOSTS', default=[])
 
 
 # Application definition
@@ -147,6 +147,11 @@ INTERNAL_IPS = []
 # tricks to have debug toolbar when developing with docker
 ip = socket.gethostbyname(socket.gethostname())
 INTERNAL_IPS += [ip[:-1] + '1']
+
+# CELERY
+# ------------------------------------------------------------------------------
+
+CELERY_BROKER_URL = env('REDIS_URL')
 
 # CACHES
 # ------------------------------------------------------------------------------

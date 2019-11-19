@@ -36,12 +36,8 @@ services:
       - redis
     volumes:
       - ./server:/app
-    environment:
-      DATABASE_URL: postgresql://postgresadmin:admin123@database:5432/postgresdb
-      DJANGO_ALLOWED_HOSTS: localhost,server
-      DJANGO_CORS_ORIGIN_WHITELIST: http://localhost:8080,http://client:8080
-      DJANGO_TRUSTED_ORIGINS: http://localhost:8080,http://client:8080
-      REDIS_URL: redis://redis:6379/0
+    env_file:
+      - ./server/.env
     tty: true
     stdin_open: true
     ports:
@@ -54,6 +50,18 @@ services:
       - 6379:6379
     volumes:
       - redisdata:/data
+
+  celery:
+    build:
+      context: ./server
+    command: celery -A doppelganger worker -l info
+    volumes:
+      - ./server:/app
+    depends_on:
+      - database
+      - redis
+    env_file:
+      - ./server/.env
 
   database:
     image: 'postgres:10.11'
