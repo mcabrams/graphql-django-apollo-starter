@@ -33,17 +33,43 @@ services:
         python manage.py runserver 0.0.0.0:8000
     depends_on:
       - database
+      - redis
     volumes:
       - ./server:/app
-    environment:
-      DATABASE_URL: postgresql://postgresadmin:admin123@database:5432/postgresdb
-      DJANGO_ALLOWED_HOSTS: localhost,server
-      DJANGO_CORS_ORIGIN_WHITELIST: http://localhost:8080,http://client:8080
-      DJANGO_TRUSTED_ORIGINS: http://localhost:8080,http://client:8080
+    env_file:
+      - ./server/.env
     tty: true
     stdin_open: true
     ports:
       - 8000:8000
+
+  redis:
+    restart: always
+    image: 'redis:5.0.6'
+    ports:
+      - 6379:6379
+    volumes:
+      - redisdata:/data
+
+  celery:
+    build:
+      context: ./server
+    command: celery -A doppelganger worker -l info
+    volumes:
+      - ./server:/app
+    depends_on:
+      - database
+      - redis
+    env_file:
+      - ./server/.env
+
+  flower:
+    image: mher/flower
+    environment:
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - FLOWER_PORT=8888
+    ports:
+      - 8888:8888
 
   database:
     image: 'postgres:10.11'
@@ -58,3 +84,4 @@ services:
 
 volumes:
   postgres: ~
+  redisdata: ~

@@ -37,12 +37,14 @@ services:
         python manage.py runserver 0.0.0.0:8001
     depends_on:
       - database
+      - redis
     volumes:
       - ./server:/app
       - /app/schema/  # Don't want to overwrite what's generated via
                       # the non-test environment.
+    env_file:
+      - ./server/.env
     environment:
-      DATABASE_URL: postgresql://postgresadmin:admin123@database:5432/postgresdb
       DJANGO_ALLOWED_HOSTS: localhost,server-test
       DJANGO_CORS_ORIGIN_WHITELIST: http://localhost:8081,http://client-test:8080
       DJANGO_TRUSTED_ORIGINS: http://localhost:8081,http://client-test:8080
