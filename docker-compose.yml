@@ -38,6 +38,8 @@ services:
       - ./server:/app
     env_file:
       - ./server/.env
+    environment:
+      - SENTRY_DSN=${SENTRY_DSN}
     tty: true
     stdin_open: true
     ports:
@@ -62,6 +64,8 @@ services:
       - redis
     env_file:
       - ./server/.env
+    environment:
+      - SENTRY_DSN=${SENTRY_DSN}
 
   flower:
     image: mher/flower

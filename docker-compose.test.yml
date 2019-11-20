@@ -45,6 +45,7 @@ services:
     env_file:
       - ./server/.env
     environment:
+      SENTRY_DSN: ${SENTRY_DSN}
       DJANGO_ALLOWED_HOSTS: localhost,server-test
       DJANGO_CORS_ORIGIN_WHITELIST: http://localhost:8081,http://client-test:8080
       DJANGO_TRUSTED_ORIGINS: http://localhost:8081,http://client-test:8080

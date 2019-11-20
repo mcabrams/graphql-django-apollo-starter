@@ -15,6 +15,12 @@ import environ
 import os
 import socket
 
+import sentry_sdk
+from sentry_sdk.integrations.celery import CeleryIntegration
+from sentry_sdk.integrations.django import DjangoIntegration
+from sentry_sdk.integrations.redis import RedisIntegration
+
+
 env = environ.Env()
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -152,6 +158,14 @@ INTERNAL_IPS += [ip[:-1] + '1']
 # ------------------------------------------------------------------------------
 
 CELERY_BROKER_URL = env('REDIS_URL')
+
+# ERROR TRACKING
+# ------------------------------------------------------------------------------
+
+sentry_sdk.init(
+    dsn=env("SENTRY_DSN"),
+    integrations=[CeleryIntegration(), DjangoIntegration(), RedisIntegration()]
+)
 
 # CACHES
 # ------------------------------------------------------------------------------

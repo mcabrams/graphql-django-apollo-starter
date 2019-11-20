@@ -1,7 +1,11 @@
 # Graphql Django Apollo Starter
 
-Create a new repo based off of this.  Enable renovatebot, and add project to
-CircleCI.  Do a grep for doppelganger and replace with desired app name.
+- Create a new repo based off of this.
+- Do a grep for doppelganger and replace with desired app name.
+- Create a new sentry project, and save dsn value.
+- Copy .env.example to .env and set SENTRY_DSN value to dsn value saved above.
+- Enable renovatebot, and add project to CircleCI (and set DSN value in
+environment variables for Circle ci from value saved above).
 
 ## Development Setup
 
