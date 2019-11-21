@@ -74,6 +74,8 @@ services:
       - FLOWER_PORT=8888
     ports:
       - 8888:8888
+    depends_on:
+        - redis
 
   database:
     image: 'postgres:10.11'
