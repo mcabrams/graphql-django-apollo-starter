@@ -1,5 +1,6 @@
-# Local env file that is copied from .env.example
-.env
+# Local env files that are copied from .env.example
+/.env
+client/.env
 
 node_modules
 env-config.js

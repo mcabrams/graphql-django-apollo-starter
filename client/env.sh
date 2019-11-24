@@ -11,6 +11,11 @@ echo "window._env_ = {" >> ./src/generated/env-config.js
 # Each line represents key=value pairs
 while read -r line || [[ -n "$line" ]];
 do
+  # Skip commented lines (that start with a hashtag)
+  if [[ "$line" == \#* ]]; then
+    continue
+  fi
+
   # Split env variables by character `=`
   if printf '%s\n' "$line" | grep -q -e '='; then
     varname=$(printf '%s\n' "$line" | sed -e 's/=.*//')

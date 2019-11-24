@@ -8,8 +8,11 @@ jobs:
     steps:
       - checkout
       - run:
-          name: make .env file
-          command: cp .env.example .env  # make default .env file, sensitive values will be set in admin
+          name: make .env files
+          command: |
+            cp .env.example .env  # make default .env file, sensitive values will be set in admin
+            cp client/.env.example client/.env
+            echo "SENTRY_DSN=$SENTRY_DSN" >> client/.env  # Only have to do this for client env because it needs it as build time and won't receive env variables set up in admin
 
       - run:
           name: build
