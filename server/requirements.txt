@@ -10,6 +10,11 @@ django-environ==0.4.5
 django-graphql-jwt==0.2.2
 graphene-django==2.6.0
 
+# Technically graphene and graphql-core should not have to be specified here,
+# but running into a compatibility issue unless it is locked as pre 3.0
+graphene==2.1.8
+graphql-core==2.2.1
+
 # Data stores
 psycopg2==2.8.4
 redis==3.3.11
