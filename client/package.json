@@ -34,7 +34,7 @@
     "@types/use-persisted-state": "0.3.0",
     "@typescript-eslint/eslint-plugin": "2.9.0",
     "@typescript-eslint/parser": "2.9.0",
-    "css-loader": "3.2.0",
+    "css-loader": "3.2.1",
     "dotenv": "8.2.0",
     "eslint": "6.7.1",
     "eslint-config-airbnb": "18.0.1",
