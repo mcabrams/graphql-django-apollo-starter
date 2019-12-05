@@ -28,7 +28,7 @@ celery==4.3.0
 ############
 
 # Error tracking
-sentry-sdk==0.13.4
+sentry-sdk==0.13.5
 
 ###################
 # Local and testing
