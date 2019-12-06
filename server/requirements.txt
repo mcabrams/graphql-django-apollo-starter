@@ -13,7 +13,7 @@ graphene-django==2.7.1
 # Technically graphene and graphql-core should not have to be specified here,
 # but running into a compatibility issue unless it is locked as pre 3.0
 graphene==2.1.8
-graphql-core==2.2.1
+graphql-core==3.0.1
 
 # Data stores
 psycopg2==2.8.4
