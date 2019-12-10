@@ -1,0 +1,51 @@
+name: ci
+
+on: [push]
+
+env:
+  SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+      
+    - name: make .env files
+      run: |
+            cp .env.example .env  # make default .env file, sensitive values will be set in admin
+            cp client/.env.example client/.env
+            echo "SENTRY_DSN=$SENTRY_DSN" >> client/.env  # Only have to do this for client env because it needs it as build time and won't receive env variables set up in admin
+            
+    - name: build
+      run: docker-compose -f docker-compose.yml -f docker-compose.test.yml build
+
+    - name: server tests
+      run: docker-compose -f docker-compose.yml -f docker-compose.test.yml run server ./wait-for.sh database:5432 -- python manage.py test
+
+    - name: client linting
+      run: docker-compose -f docker-compose.yml -f docker-compose.test.yml run client npm run lint
+
+    - name: client tests
+      run: docker-compose -f docker-compose.yml -f docker-compose.test.yml run client npm run test
+
+    - name: e2e tests
+      run: ./e2e/test.sh --no-cleanup
+  
+    - name: Upload e2e video artifacts
+      uses: actions/upload-artifact@v1.0.0
+      with:
+        # Artifact name
+        name: e2e videos
+        # Directory containing files to upload
+        path: e2e/cypress/videos
+
+    - name: Upload e2e screenshot artifacts
+      uses: actions/upload-artifact@v1.0.0
+      with:
+        # Artifact name
+        name: e2e screenshots
+        # Directory containing files to upload
+        path: e2e/cypress/screenshots
