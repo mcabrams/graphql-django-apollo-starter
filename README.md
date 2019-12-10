@@ -5,8 +5,8 @@
 - Create a new sentry project, and save dsn value.
 - Copy .env.example in root directory and in client directory to .env in
 respective directories and set SENTRY_DSN value to dsn value saved above.
-- Enable renovatebot, and add project to CircleCI (and set DSN value in
-environment variables for Circle ci from value saved above).
+- set DSN value in environment variables for github actions (use secret)
+- Enable renovatebot
 
 ## Development Setup
 
