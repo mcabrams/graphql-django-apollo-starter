@@ -5,9 +5,11 @@ client/.env
 node_modules
 env-config.js
 
-# Testing artifacts
-**/cypress/videos
-**/cypress/screenshots
+# Testing artifacts (keep folders for CI, but not contents)
+e2e/cypress/videos/*
+!e2e/cypress/videos/.gitkeep
+e2e/cypress/screenshots/*
+!e2e/cypress/screenshots/.gitkeep
 
 # Python stuff
 __pycache__
