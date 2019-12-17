@@ -2,6 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: server-config
+  stage: {{ .Values.stage }}
 data:
   SENTRY_DSN: https://19d74ebe7b174d399ebcb96320129b6b@sentry.io/1827306
   DJANGO_CORS_ORIGIN_WHITELIST: http://localhost:8080,http://client:8080

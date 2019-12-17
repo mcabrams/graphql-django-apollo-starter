@@ -1,6 +1,7 @@
 ---
 # Global settings
 host: doppelganger.local
+stage: dev
 
 ingress:
   enabled: true

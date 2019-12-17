@@ -4,7 +4,7 @@ metadata:
   name: database-disk
   labels:
     app: database
-    stage: production
+    stage: {{ .Values.stage }}
 spec:
   accessModes:
     - ReadWriteOnce
