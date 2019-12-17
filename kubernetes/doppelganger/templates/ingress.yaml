@@ -6,7 +6,7 @@ metadata:
     ingress.kubernetes.io/rewrite-target: /
 spec:
   rules:
-    - host: doppelganger.local
+    - host: {{ .Values.host }}
       http:
         paths:
           - path: /

@@ -23,11 +23,32 @@ spec:
         - name: server
           image: 'gcr.io/graphql-django-apollo-starter/server:latest'
           ports:
-            - name: server-8000
+            - name: http
               containerPort: 8000
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /admin
+              port: http
+              httpHeaders:
+                - name: Host
+                  value: {{ .Values.host }}
+            initialDelaySeconds: 80
+            periodSeconds: 20
+            failureThreshold: 6
+          readinessProbe:
+            httpGet:
+              path: /admin
+              port: http
+              httpHeaders:
+                - name: Host
+                  value: {{ .Values.host }}
+            initialDelaySeconds: 40
+            periodSeconds: 10
+            failureThreshold: 12
           env:
             - name: DJANGO_ALLOWED_HOSTS
-              value: '*'
+              value: {{ .Values.host }}
             - name: DJANGO_TRUSTED_ORIGINS
               value: '*'
 
