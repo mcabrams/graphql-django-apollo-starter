@@ -131,7 +131,6 @@ apiVersion: v1
 kind: Secret
 metadata:
   name: database-credentials
-  namespace: doppelganger
 type: Opaque
 data:
   user: # fill in user_encoded
@@ -153,7 +152,6 @@ apiVersion: v1
 kind: Secret
 metadata:
   name: server-credentials
-  namespace: doppelganger
 type: Opaque
 data:
   database_url: # fill in database_url_encoded
