@@ -105,7 +105,64 @@ docker push gcr.io/graphql-django-apollo-starter/server:latest
 
 ## Kubernetes Locally
 
-Quickstart (if killed minikube and already created secrets files):
+### Begin here if setting up first time
+
+Set up kubernetes, minikube, etc.  Start minikube.
+
+You'll want to grab the gcr json key by creating a service account in google
+cloud (along with corresponding project, first) and downloading the json key
+file.  Move this to the root repository directory and name it
+`json-key-file.json`.
+
+Encode database secrets
+
+```sh
+# username
+echo -n 'postgresadmin' | base64
+# password
+echo -n 'admin123' | base64
+```
+
+Create a `secrets.yaml` in `./kubernetes/doppelganger/templates/database` and
+fill in like:
+
+```
+apiVersion: v1
+kind: Secret
+metadata:
+  name: database-credentials
+  namespace: doppelganger
+type: Opaque
+data:
+  user: # fill in user_encoded
+  password: # fill in password_encoded
+```
+
+Encode server secrets
+
+```sh
+# database_url
+echo -n 'postgresql://postgresadmin:admin123@database-service:5432/postgresdb' | base64
+```
+
+Create a `secrets.yaml` in `./kubernetes/doppelganger/templates/server` and
+fill in like:
+
+```
+apiVersion: v1
+kind: Secret
+metadata:
+  name: server-credentials
+  namespace: doppelganger
+type: Opaque
+data:
+  database_url: # fill in database_url_encoded
+```
+
+Then run the quick start command below.
+
+
+### Quickstart (if killed minikube and already created secrets files):
 
 ```sh
 kubectl create namespace doppelganger
@@ -137,196 +194,6 @@ would mean you should add this line to `/etc/hosts`:
 ```
 192.168.99.121 doppelganger.local
 ```
-
-Set up kubernetes, minikube, etc.  Start minikube.
-
-Setup secret for access to private docker images.  Make sure to appropriately
-setup authorization according to registry being used (i.e. gcr via gcloud).
-Examples here for how to generate json file (move to ./json-key-file.json).
-
-```sh
-kubectl create secret docker-registry gcr-json-key \
-  --namespace doppelganger \
-  --docker-server=gcr.io \
-  --docker-username=_json_key \
-  --docker-password="$(cat ./json-key-file.json)" \
-  --docker-email=any@valid.email
-
-kubectl patch serviceaccount default \
-  -p "{\"imagePullSecrets\": [{\"name\": \"gcr-json-key\"}]}"
-```
-
-```sh
-kubectl create namespace doppelganger
-```
-
-Encode database secrets
-
-```sh
-# username
-echo -n 'postgresadmin' | base64
-# password
-echo -n 'admin123' | base64
-```
-
-Create a `secrets.yaml` in `./kubernetes/database` and fill in like
-
-```
-apiVersion: v1
-kind: Secret
-metadata:
-  name: database-credentials
-  namespace: doppelganger
-type: Opaque
-data:
-  user: # fill in user_encoded
-  password: # fill in password_encoded
-```
-
-```sh
-kubectl apply -f ./kubernetes/database
-```
-
-Encode server secrets
-
-```sh
-# database_url
-echo -n 'postgresql://postgresadmin:admin123@database-service:5432/postgresdb' | base64
-```
-
-Create a `secrets.yaml` in `./kubernetes/server` and fill in like
-
-```
-apiVersion: v1
-kind: Secret
-metadata:
-  name: server-credentials
-  namespace: doppelganger
-type: Opaque
-data:
-  database_url: # fill in database_url_encoded
-```
-
-```sh
-kubectl apply -f ./kubernetes/server
-```
-
-
-```sh
-# create a GCP service account; format of account is email address
-SA_EMAIL=$(gcloud iam service-accounts --format='value(email)' create k8s-gcr-auth-ro)
-# create the json key file and associate it with the service account
-gcloud iam service-accounts keys create k8s-gcr-auth-ro.json --iam-account=$SA_EMAIL
-# get the project id
-PROJECT=$(gcloud config list core/project --format='value(core.project)')
-# add the IAM policy binding for the defined project and service account
-gcloud projects add-iam-policy-binding $PROJECT --member serviceAccount:$SA_EMAIL --role roles/storage.objectViewer
-```
-
-if `.docker` is in home directory:
-```sh
-SECRETNAME=regcred
-
-kubectl create secret docker-registry $SECRETNAME \
-  --namespace prisma \
-  --docker-server=https://gcr.io \
-  --docker-username=_json_key \
-  --docker-email=mcabrams1@gmail.com.com \
-  --docker-password="$(cat k8s-gcr-auth-ro.json)"
-```
-
-Add the secret to the Kubernetes configuration.
-You can add it to the default service account with the following command:
-
-```sh
-SECRETNAME=regcred
-
-kubectl patch serviceaccount default \
-  -n prisma \
-  -p "{\"imagePullSecrets\": [{\"name\": \"$SECRETNAME\"}]}"
-```
-
-Then deploy manifests either with kubectl or skaffold
-
-
-### Option 1: skaffold
-
-```sh
-# This first line is necessary to apply the name space
-kubectl apply -f .
-skaffold dev --port-forward
-```
-
-### Options 2: kubectl
-
-```sh
-kubectl apply -f .
-kubectl apply -f ./server/
-kubectl apply -f ./database/
-kubectl apply -f ./prisma/
-```
-
-Note: You can skip below if you opted for skaffold!
-
------- SKIPPABLE W/ SKAFFOLD -------
-
-Find the pod to exec prisma deploy and generate
-
-```sh
-kubectl get pods -n prisma
-```
-
-Which will return something like
-
-```sh
-NAME                        READY   STATUS    RESTARTS   AGE
-database-657f469468-frg5j   1/1     Running   0          3h49m
-prisma-6d4fbf99b4-6t29g     1/1     Running   0          3h49m
-server-5b9454995c-pr8pf     1/1     Running   0          5m42s
-```
-
-Port forward the prisma instance
-
-`kubectl port-forward -n prisma <the-pod-name> 4467:4466` – This will
-forward from `127.0.0.1:4467` -> `kubernetes-cluster:4466`
-
------- END SKIPPABLE W/ SKAFFOLD -------
-
-The Prisma server is now reachable via `http://localhost:4467`. This is the
-actual `endpoint` we have specified in `.local.env`. We can now deploy
-`prisma` and deploy to stage `production`, at:
-`http://localhost:4467/prisma/production`.
-
-If you haven't already, install prisma on host:
-```sh
-npm install -g prisma
-```
-
-With this in place, we can deploy the Prisma service via the Prisma CLI
-(`cd server; prisma deploy -e .local.env`) as long as the port
-forwarding to the cluster is active.`
-
-<!-- Then exec sh on server pod and deploy prisma -->
-
-<!-- ```sh -->
-<!-- kubectl exec -it -n prisma server-5b9454995c-pr8pf /bin/sh -->
-<!-- ./node_modules/.bin/prisma deploy -->
-<!-- ./node_modules/.bin/prisma generate -->
-<!-- ``` -->
-
-
-Open server in browser
-```sh
-minikube service -n prisma server
-```
-
-Open client in browser
-```sh
-minikube service -n prisma client
-```
-
-
-You'll need to add /graphql to get to the graphql playground
 
 ## Proposed CI
 
