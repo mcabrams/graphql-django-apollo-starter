@@ -6,3 +6,4 @@ RUN apt-get -q update && apt-get -qy install netcat
 COPY requirements.txt /app/
 RUN pip install -r requirements.txt
 COPY . /app/
+CMD bash -c "python manage.py graphql_schema && python manage.py runserver 0.0.0.0:8000"

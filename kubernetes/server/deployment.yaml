@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: server
+  namespace: doppelganger
+  labels:
+    app: server
+    stage: production
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: server
+      stage: production
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        stage: production
+        app: server
+    spec:
+      containers:
+        - name: server
+          image: 'gcr.io/graphql-django-apollo-starter/server:latest'
+          ports:
+            - name: server-8000
+              containerPort: 8000
+          env:
+            - name: DJANGO_ALLOWED_HOSTS
+              value: '*'
+            - name: DJANGO_TRUSTED_ORIGINS
+              value: '*'
+
+            # Config
+            - name: SENTRY_DSN
+              valueFrom:
+                configMapKeyRef:
+                  name: server-config
+                  key: SENTRY_DSN
+            - name: DJANGO_CORS_ORIGIN_WHITELIST
+              valueFrom:
+                configMapKeyRef:
+                  name: server-config
+                  key: DJANGO_CORS_ORIGIN_WHITELIST
+
+            # Secrets
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: server-credentials
+                  key: database_url
+            - name: REDIS_URL
+              valueFrom:
+                secretKeyRef:
+                  name: server-credentials
+                  key: redis_url
+      imagePullSecrets:
+        - name: gcr-json-key

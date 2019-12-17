@@ -1,0 +1,16 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: server-ingress
+  namespace: doppelganger
+  annotations:
+    ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+    - host: doppelganger.local
+      http:
+        paths:
+          - path: /
+            backend:
+              serviceName: server-service
+              servicePort: 8000

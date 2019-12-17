@@ -1,0 +1,12 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: database-service
+  namespace: doppelganger
+spec:
+  selector:
+    app: database
+  ports:
+    - protocol: TCP
+      port: 5432
+      targetPort: 5432

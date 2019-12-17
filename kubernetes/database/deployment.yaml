@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: database
+  namespace: doppelganger
+  labels:
+    app: database
+    stage: production
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: database
+      stage: production
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: database
+        stage: production
+    spec:
+      containers:
+        - name: database-container
+          image: 'postgres:10.11'
+          env:
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: database-credentials
+                  key: user
+
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: database-credentials
+                  key: password
+
+            - name: POSTGRES_DB
+              value: postgresdb
+
+          ports:
+            - containerPort: 5432
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data
+              name: database-disk
+          ports:
+            - name: postgresql-5432
+              containerPort: 5432
+      volumes:
+        - name: database-disk
+          persistentVolumeClaim:
+            claimName: database-disk
