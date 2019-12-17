@@ -2,7 +2,6 @@ kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
   name: database-disk
-  namespace: doppelganger
   labels:
     app: database
     stage: production

@@ -2,7 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: database
-  namespace: doppelganger
   labels:
     app: database
     stage: production
