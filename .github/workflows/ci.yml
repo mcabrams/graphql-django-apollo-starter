@@ -4,6 +4,7 @@ on: [push]
 
 env:
   SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+  GCR_JSON_KEY: ${{ secrets.GCR_JSON_KEY }}
 
 jobs:
   build:
@@ -12,13 +13,13 @@ jobs:
 
     steps:
     - uses: actions/checkout@v1
-      
+
     - name: make .env files
       run: |
             cp .env.example .env  # make default .env file, sensitive values will be set in admin
             cp client/.env.example client/.env
             echo "SENTRY_DSN=$SENTRY_DSN" >> client/.env  # Only have to do this for client env because it needs it as build time and won't receive env variables set up in admin
-            
+
     - name: build
       run: docker-compose -f docker-compose.yml -f docker-compose.test.yml build
 
@@ -33,7 +34,7 @@ jobs:
 
     - name: e2e tests
       run: ./e2e/test.sh --no-cleanup
-  
+
     - name: Upload e2e video artifacts
       uses: actions/upload-artifact@v1.0.0
       with:
@@ -49,3 +50,29 @@ jobs:
         name: e2e screenshots
         # Directory containing files to upload
         path: e2e/cypress/screenshots
+
+    # Install kubernetes and helm and test that charts install
+    - name: Minikube (Single node Kubernetes) Action
+      uses: opsgang/ga-setup-minikube@v0.1.1
+      with:
+        minikube-version: 1.5.2
+        k8s-version: 1.16.2
+
+    - name: Helm tool installer
+      uses: Azure/setup-helm@v1
+      with:
+        version: 'v3.0.1'
+
+    - name: Verify helm charts install
+      run: |
+            kubectl create namespace doppelganger
+            kubectl create secret docker-registry gcr-json-key \
+              --namespace doppelganger \
+              --docker-server=gcr.io \
+              --docker-username=_json_key \
+              --docker-password="$GCR_JSON_KEY" \
+              --docker-email=any@valid.email
+
+            kubectl patch serviceaccount default \
+              -p "{\"imagePullSecrets\": [{\"name\": \"gcr-json-key\"}]}"
+            helm install doppelganger ./kubernetes/doppelganger --namespace=doppelganger

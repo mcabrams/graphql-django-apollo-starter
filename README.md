@@ -4,10 +4,19 @@
 - Do a grep for `doppelganger` and `graphql-django-apollo-starter` and replace
 each with desired app name. Make sure to do case insensitive search.
 - Create a new google cloud project with your new app name.
+- Create a new service account for the google cloud project, and generate a new
+json key file, follow steps here (roughly):
+  - https://blog.container-solutions.com/using-google-container-registry-with-kubernetes
+  - http://docs.heptio.com/content/private-registries/pr-gcr.html
+  - Rename the file to json-key-file.json and place in repo's root directory.
 - Create a new sentry project, and save dsn value.
 - Copy .env.example in root directory and in client directory to .env in
 respective directories and set SENTRY_DSN value to dsn value saved above.
-- set DSN value in environment variables for github actions (use secret)
+- Set DSN value in environment variables, and the contents of
+  json-key-file.json that you made earlier for github actions (use secret)
+    - Keys will be:
+      - GCR_JSON_KEY
+      - SENTRY_DSN
 - Enable renovatebot
 
 ## Development Setup
@@ -21,36 +30,7 @@ docker-compose up -d
 
 Open localhost:8080 in your browser.
 
-### Server
-```sh
-cd server/
-docker-compose build
-docker-compose up -d
-```
-
-To perform actions inside container:
-```
-docker-compose run server /bin/sh
-```
-
-Open http://localhost:8000/graphql
-
-
-### Client
-```sh
-cd client/
-docker-compose build
-docker-compose up -d
-```
-
-To perform actions inside container:
-```
-docker-compose run client /bin/sh
-```
-
-Open http://localhost:8080
-
-## Development Host Side
+## Development Host Side Notes
 
 If you want things like linting and typechecking to work on the host side,
 feel free to run `npm install` from host (in `server/` or `client/`) directory
@@ -99,8 +79,6 @@ docker tag doppelganger_server:latest gcr.io/graphql-django-apollo-starter/serve
 docker push gcr.io/graphql-django-apollo-starter/server:latest
 ```
 (https://cloud.google.com/container-registry/docs/pushing-and-pulling)
-
-
 
 
 ## Kubernetes Locally
