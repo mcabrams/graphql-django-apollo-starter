@@ -12,10 +12,8 @@ json key file, follow steps here (roughly):
 - Create a new sentry project, and save dsn value.
 - Copy .env.example in root directory and in client directory to .env in
 respective directories and set SENTRY_DSN value to dsn value saved above.
-- Set DSN value in environment variables, and the contents of
-  json-key-file.json that you made earlier for github actions (use secret)
+- Setup following secrets in github repo's secrets:
     - Keys will be:
-      - GCR_JSON_KEY
       - SENTRY_DSN
 - Enable renovatebot
 

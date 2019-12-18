@@ -4,7 +4,6 @@ on: [push]
 
 env:
   SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
-  GCR_JSON_KEY: ${{ secrets.GCR_JSON_KEY }}
 
 jobs:
   build:
@@ -50,36 +49,3 @@ jobs:
         name: e2e screenshots
         # Directory containing files to upload
         path: e2e/cypress/screenshots
-
-    # Install kubernetes and helm and test that charts install
-    - name: Minikube (Single node Kubernetes) Action
-      uses: opsgang/ga-setup-minikube@v0.1.1
-      with:
-        minikube-version: 1.5.2
-        k8s-version: 1.16.2
-
-    - name: Helm tool installer
-      uses: Azure/setup-helm@v1
-      with:
-        version: 'v3.0.1'
-
-    - name: Configure k8s setup
-      run: |
-            minikube config set vm-driver kvm2
-            minikube addons enable ingress
-            minikube start
-            minikube update-context
-            kubectl create namespace doppelganger
-            kubectl create secret docker-registry gcr-json-key \
-              --namespace doppelganger \
-              --docker-server=gcr.io \
-              --docker-username=_json_key \
-              --docker-password="$GCR_JSON_KEY" \
-              --docker-email=any@valid.email
-
-            kubectl patch serviceaccount default \
-              -p "{\"imagePullSecrets\": [{\"name\": \"gcr-json-key\"}]}"
-
-    - name: Verify helm charts install
-      run: |
-            helm install doppelganger ./kubernetes/doppelganger --namespace=doppelganger
