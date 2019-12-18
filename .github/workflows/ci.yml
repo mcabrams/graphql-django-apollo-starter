@@ -65,7 +65,10 @@ jobs:
 
     - name: Configure k8s setup
       run: |
+            minikube config set vm-driver kvm2
             minikube addons enable ingress
+            minikube start
+            minikube update-context
             kubectl create namespace doppelganger
             kubectl create secret docker-registry gcr-json-key \
               --namespace doppelganger \
