@@ -3,5 +3,10 @@
 host: doppelganger.local
 stage: dev
 
+django:
+  replicas: 1
+  readinessPath: /admin
+  livenessPath: /admin
+
 ingress:
   enabled: true

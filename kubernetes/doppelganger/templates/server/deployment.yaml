@@ -6,7 +6,7 @@ metadata:
     app: server
     stage: {{ .Values.stage }}
 spec:
-  replicas: 1
+  replicas: {{ .Values.django.replicas }}
   selector:
     matchLabels:
       app: server
@@ -28,7 +28,7 @@ spec:
               protocol: TCP
           livenessProbe:
             httpGet:
-              path: /admin
+              path: {{ .Values.django.livenessPath }}
               port: http
               httpHeaders:
                 - name: Host
@@ -38,7 +38,7 @@ spec:
             failureThreshold: 6
           readinessProbe:
             httpGet:
-              path: /admin
+              path: {{ .Values.django.readinessPath }}
               port: http
               httpHeaders:
                 - name: Host
