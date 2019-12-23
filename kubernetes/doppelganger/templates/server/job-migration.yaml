@@ -1,0 +1,41 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: django-migrations
+spec:
+  template:
+    spec:
+      containers:
+        - name: django
+          image: {{ .Values.django.image }}
+          command:
+            - /bin/bash
+            - -c
+            - |
+              python manage.py migrate &&
+              python manage.py graphql_schema
+          env:
+            - name: DJANGO_ALLOWED_HOSTS
+              value: {{ .Values.host }}
+            - name: DJANGO_CORS_ORIGIN_WHITELIST
+              value: {{ printf "http://%s" .Values.host }}
+            - name: DJANGO_TRUSTED_ORIGINS
+              value: {{ .Values.host }}
+            - name: SENTRY_DSN
+              value: {{ .Values.sentryDsn }}
+
+            # Secrets
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: server-credentials
+                  key: database_url
+            - name: REDIS_URL
+              valueFrom:
+                secretKeyRef:
+                  name: server-credentials
+                  key: redis_url
+      restartPolicy: Never
+      imagePullSecrets:
+        - name: gcr-json-key
+  backoffLimit: 5

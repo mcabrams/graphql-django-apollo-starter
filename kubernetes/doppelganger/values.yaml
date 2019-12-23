@@ -2,8 +2,19 @@
 # Global settings
 host: doppelganger.local
 stage: dev
+sentryDsn: https://19d74ebe7b174d399ebcb96320129b6b@sentry.io/1827306
+
+client:
+  image:  'gcr.io/graphql-django-apollo-starter/client:latest'
+  replicas: 1
+  readinessPath: /
+  livenessPath: /
+  apiServerUrl: http://doppelganger.local/api
+  apiGraphqlServerUrl: http://doppelganger.local/api/graphql
+  apiCsrftokenUrl: http://doppelganger.local/admin
 
 django:
+  image: 'gcr.io/graphql-django-apollo-starter/server:latest'
   replicas: 1
   readinessPath: /admin
   livenessPath: /admin

@@ -10,7 +10,7 @@ from doppelganger.schema import schema
 
 class GraphQLTestCase(GrapheneDjangoGraphQLTestCase):
     GRAPHQL_SCHEMA = schema
-    GRAPHQL_URL = '/graphql'
+    GRAPHQL_URL = '/api/graphql'
 
 
 class JSONWebTokenTestCase(GraphqlJWTJSONWebTokenTestCase):

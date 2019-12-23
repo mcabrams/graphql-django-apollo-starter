@@ -43,7 +43,7 @@ class GraphQLView(GrapheneDjangoGraphQLView):
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('graphql', jwt_cookie(GraphQLView.as_view(graphiql=True))),
+    path('api/graphql', jwt_cookie(GraphQLView.as_view(graphiql=True))),
     path('robots.txt', cache_page(settings.CACHE_TTL)(TemplateView.as_view(
         template_name='robots.txt',
         content_type='text/plain',

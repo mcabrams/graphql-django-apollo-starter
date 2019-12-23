@@ -1,14 +1,14 @@
 kind: Service
 apiVersion: v1
 metadata:
-  name: server-service
+  name: client-service
   labels:
     stage: {{ .Values.stage }}
 spec:
   selector:
-    app: server
+    app: client
   ports:
   - protocol: TCP
-    port: 8000
-    targetPort: 8000
+    port: 80
+    targetPort: 80
   type: NodePort

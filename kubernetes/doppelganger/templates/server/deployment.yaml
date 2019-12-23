@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
         - name: server
-          image: 'gcr.io/graphql-django-apollo-starter/server:latest'
+          image: {{ .Values.django.image }}
           ports:
             - name: http
               containerPort: 8000
@@ -33,7 +33,7 @@ spec:
               httpHeaders:
                 - name: Host
                   value: {{ .Values.host }}
-            initialDelaySeconds: 80
+            initialDelaySeconds: 20
             periodSeconds: 20
             failureThreshold: 6
           readinessProbe:
@@ -43,26 +43,18 @@ spec:
               httpHeaders:
                 - name: Host
                   value: {{ .Values.host }}
-            initialDelaySeconds: 40
+            initialDelaySeconds: 10
             periodSeconds: 10
             failureThreshold: 12
           env:
             - name: DJANGO_ALLOWED_HOSTS
               value: {{ .Values.host }}
-            - name: DJANGO_TRUSTED_ORIGINS
-              value: '*'
-
-            # Config
-            - name: SENTRY_DSN
-              valueFrom:
-                configMapKeyRef:
-                  name: server-config
-                  key: SENTRY_DSN
             - name: DJANGO_CORS_ORIGIN_WHITELIST
-              valueFrom:
-                configMapKeyRef:
-                  name: server-config
-                  key: DJANGO_CORS_ORIGIN_WHITELIST
+              value: {{ printf "http://%s" .Values.host }}
+            - name: DJANGO_TRUSTED_ORIGINS
+              value: {{ .Values.host }}
+            - name: SENTRY_DSN
+              value: {{ .Values.sentryDsn }}
 
             # Secrets
             - name: DATABASE_URL

@@ -72,9 +72,12 @@ you are currently on the correct cloud project (should match app name).
 
 ```sh
 gcloud auth configure-docker
-docker-compose build
+docker build ./server/ -t doppelganger_server
 docker tag doppelganger_server:latest gcr.io/graphql-django-apollo-starter/server:latest
 docker push gcr.io/graphql-django-apollo-starter/server:latest
+docker build . -f client/Dockerfile -t doppelganger_client
+docker tag doppelganger_client:latest gcr.io/graphql-django-apollo-starter/client:latest
+docker push gcr.io/graphql-django-apollo-starter/client:latest
 ```
 (https://cloud.google.com/container-registry/docs/pushing-and-pulling)
 
@@ -84,6 +87,9 @@ docker push gcr.io/graphql-django-apollo-starter/server:latest
 ### Begin here if setting up first time
 
 Set up kubernetes, minikube, etc.  Start minikube.
+
+You'll probably want to config minikube to have 8192mb of memory, and
+default it to using vm-driver (i.e. virtualbox).
 
 You'll want to grab the gcr json key by creating a service account in google
 cloud (along with corresponding project, first) and downloading the json key
@@ -169,6 +175,10 @@ would mean you should add this line to `/etc/hosts`:
 192.168.99.121 doppelganger.local
 ```
 
+If you make changes to kubernetes manifest yaml files, you can run something like
+`helm upgrade -n doppelganger doppelganger ./kubernetes/doppelganger/ --version=0.2.0`
+in order to update the helm chart and kubernetes resources in the cluster.
+
 ## Proposed CI
 
 Build images with tag of git sha
@@ -181,3 +191,10 @@ update images
 ```sh
 #TODO
 ```
+
+## Notes
+- The client has two different dockerfiles: `client/Dockerfile` and
+`client/Dockerfile.local`. The local postfixed Dockerfile is for use in docker
+compose (and is identical to the other, but does not include nginx in image),
+this is due to the fact that adding nginx wipes out development files and only
+maintains the built output assets.
