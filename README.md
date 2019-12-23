@@ -1,11 +1,20 @@
 # Graphql Django Apollo Starter
 
 - Create a new repo based off of this.
-- Do a grep for doppelganger and replace with desired app name.
+- Do a grep for `doppelganger` and `graphql-django-apollo-starter` and replace
+each with desired app name. Make sure to do case insensitive search.
+- Create a new google cloud project with your new app name.
+- Create a new service account for the google cloud project, and generate a new
+json key file, follow steps here (roughly):
+  - https://blog.container-solutions.com/using-google-container-registry-with-kubernetes
+  - http://docs.heptio.com/content/private-registries/pr-gcr.html
+  - Rename the file to json-key-file.json and place in repo's root directory.
 - Create a new sentry project, and save dsn value.
 - Copy .env.example in root directory and in client directory to .env in
 respective directories and set SENTRY_DSN value to dsn value saved above.
-- set DSN value in environment variables for github actions (use secret)
+- Setup following secrets in github repo's secrets:
+    - Keys will be:
+      - SENTRY_DSN
 - Enable renovatebot
 
 ## Development Setup
@@ -19,36 +28,7 @@ docker-compose up -d
 
 Open localhost:8080 in your browser.
 
-### Server
-```sh
-cd server/
-docker-compose build
-docker-compose up -d
-```
-
-To perform actions inside container:
-```
-docker-compose run server /bin/sh
-```
-
-Open http://localhost:8000/graphql
-
-
-### Client
-```sh
-cd client/
-docker-compose build
-docker-compose up -d
-```
-
-To perform actions inside container:
-```
-docker-compose run client /bin/sh
-```
-
-Open http://localhost:8080
-
-## Development Host Side
+## Development Host Side Notes
 
 If you want things like linting and typechecking to work on the host side,
 feel free to run `npm install` from host (in `server/` or `client/`) directory
@@ -85,7 +65,136 @@ or
 ./e2e/test.sh
 ```
 
+## Building images
+
+Make sure gcloud command line utility is installed and initiated. Make sure
+you are currently on the correct cloud project (should match app name).
+
+```sh
+gcloud auth configure-docker
+docker build ./server/ -t doppelganger_server
+docker tag doppelganger_server:latest gcr.io/graphql-django-apollo-starter/server:latest
+docker push gcr.io/graphql-django-apollo-starter/server:latest
+docker build . -f client/Dockerfile -t doppelganger_client
+docker tag doppelganger_client:latest gcr.io/graphql-django-apollo-starter/client:latest
+docker push gcr.io/graphql-django-apollo-starter/client:latest
+```
+(https://cloud.google.com/container-registry/docs/pushing-and-pulling)
+
+
+## Kubernetes Locally
+
+### Begin here if setting up first time
+
+Set up kubernetes, minikube, etc.  Start minikube.
+
+You'll probably want to config minikube to have 8192mb of memory, and
+default it to using vm-driver (i.e. virtualbox).
+
+You'll want to grab the gcr json key by creating a service account in google
+cloud (along with corresponding project, first) and downloading the json key
+file.  Move this to the root repository directory and name it
+`json-key-file.json`.
+
+Encode database secrets
+
+```sh
+# username
+echo -n 'postgresadmin' | base64
+# password
+echo -n 'admin123' | base64
+```
+
+Create a `secrets.yaml` in `./kubernetes/doppelganger/templates/database` and
+fill in like:
+
+```
+apiVersion: v1
+kind: Secret
+metadata:
+  name: database-credentials
+type: Opaque
+data:
+  user: # fill in user_encoded
+  password: # fill in password_encoded
+```
+
+Encode server secrets
+
+```sh
+# database_url
+echo -n 'postgresql://postgresadmin:admin123@database-service:5432/postgresdb' | base64
+```
+
+Create a `secrets.yaml` in `./kubernetes/doppelganger/templates/server` and
+fill in like:
+
+```
+apiVersion: v1
+kind: Secret
+metadata:
+  name: server-credentials
+type: Opaque
+data:
+  database_url: # fill in database_url_encoded
+```
+
+Then run the quick start command below.
+
+
+### Quickstart (if killed minikube and already created secrets files):
+
+```sh
+kubectl create namespace doppelganger
+kubectl create secret docker-registry gcr-json-key \
+  --namespace doppelganger \
+  --docker-server=gcr.io \
+  --docker-username=_json_key \
+  --docker-password="$(cat ./json-key-file.json)" \
+  --docker-email=any@valid.email
+
+kubectl patch serviceaccount default \
+  -p "{\"imagePullSecrets\": [{\"name\": \"gcr-json-key\"}]}"
+helm install doppelganger ./kubernetes/doppelganger --namespace=doppelganger
+kubectl get -n doppelganger ingresses.extensions -w
+```
+
+Once address is populated, add it to your `/etc/hosts`
+
+i.e.
+
+```sh
+NAME             HOSTS                ADDRESS   PORTS   AGE
+server-ingress   doppelganger.local             80      12s
+server-ingress   doppelganger.local   192.168.99.121   80      33s
+```
+
+would mean you should add this line to `/etc/hosts`:
+
+```
+192.168.99.121 doppelganger.local
+```
+
+If you make changes to kubernetes manifest yaml files, you can run something like
+`helm upgrade -n doppelganger doppelganger ./kubernetes/doppelganger/ --version=0.2.0`
+in order to update the helm chart and kubernetes resources in the cluster.
+
+## Proposed CI
+
+Build images with tag of git sha
+Push to container registry
+Run tests (referring to pulled image sha matching commit)
+If review app, check to see if pushed commit is in pull request/branch, if it is
+update images
+
 ## Deployment
 ```sh
 #TODO
 ```
+
+## Notes
+- The client has two different dockerfiles: `client/Dockerfile` and
+`client/Dockerfile.local`. The local postfixed Dockerfile is for use in docker
+compose (and is identical to the other, but does not include nginx in image),
+this is due to the fact that adding nginx wipes out development files and only
+maintains the built output assets.

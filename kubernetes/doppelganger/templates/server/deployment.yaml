@@ -1,0 +1,71 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: server
+  labels:
+    app: server
+    stage: {{ .Values.stage }}
+spec:
+  replicas: {{ .Values.django.replicas }}
+  selector:
+    matchLabels:
+      app: server
+      stage: {{ .Values.stage }}
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        stage: {{ .Values.stage }}
+        app: server
+    spec:
+      containers:
+        - name: server
+          image: {{ .Values.django.image }}
+          ports:
+            - name: http
+              containerPort: 8000
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: {{ .Values.django.livenessPath }}
+              port: http
+              httpHeaders:
+                - name: Host
+                  value: {{ .Values.host }}
+            initialDelaySeconds: 20
+            periodSeconds: 20
+            failureThreshold: 6
+          readinessProbe:
+            httpGet:
+              path: {{ .Values.django.readinessPath }}
+              port: http
+              httpHeaders:
+                - name: Host
+                  value: {{ .Values.host }}
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            failureThreshold: 12
+          env:
+            - name: DJANGO_ALLOWED_HOSTS
+              value: {{ .Values.host }}
+            - name: DJANGO_CORS_ORIGIN_WHITELIST
+              value: {{ printf "http://%s" .Values.host }}
+            - name: DJANGO_TRUSTED_ORIGINS
+              value: {{ .Values.host }}
+            - name: SENTRY_DSN
+              value: {{ .Values.sentryDsn }}
+
+            # Secrets
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: server-credentials
+                  key: database_url
+            - name: REDIS_URL
+              valueFrom:
+                secretKeyRef:
+                  name: server-credentials
+                  key: redis_url
+      imagePullSecrets:
+        - name: gcr-json-key

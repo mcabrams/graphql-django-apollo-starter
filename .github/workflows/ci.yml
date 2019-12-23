@@ -12,13 +12,13 @@ jobs:
 
     steps:
     - uses: actions/checkout@v1
-      
+
     - name: make .env files
       run: |
             cp .env.example .env  # make default .env file, sensitive values will be set in admin
             cp client/.env.example client/.env
             echo "SENTRY_DSN=$SENTRY_DSN" >> client/.env  # Only have to do this for client env because it needs it as build time and won't receive env variables set up in admin
-            
+
     - name: build
       run: docker-compose -f docker-compose.yml -f docker-compose.test.yml build
 
@@ -33,7 +33,7 @@ jobs:
 
     - name: e2e tests
       run: ./e2e/test.sh --no-cleanup
-  
+
     - name: Upload e2e video artifacts
       uses: actions/upload-artifact@v1.0.0
       with:

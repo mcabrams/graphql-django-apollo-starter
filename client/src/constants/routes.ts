@@ -5,6 +5,6 @@ export const ROUTES = {
   login: '/login',
   signup: '/signup',
   'user-list': '/users',
-  csrftoken: `${env('API_SERVER_URL')}/admin`,
+  csrftoken: env('API_CSRFTOKEN_URL'),
   protected: '/protected',
 };

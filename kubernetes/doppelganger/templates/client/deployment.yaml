@@ -1,0 +1,72 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: client
+  labels:
+    app: client
+    stage: {{ .Values.stage }}
+spec:
+  replicas: {{ .Values.client.replicas }}
+  selector:
+    matchLabels:
+      app: client
+      stage: {{ .Values.stage }}
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: client
+        stage: {{ .Values.stage }}
+    spec:
+      containers:
+        - name: client
+          image: {{ .Values.client.image }}
+          command:
+            - /bin/bash
+            - -c
+            - |
+              echo "Giving env.sh permissions..." && chmod +x ./env.sh &&
+              echo "Making src/generated/ folder..." && mkdir src && mkdir src/generated &&
+              echo "Creating .env file..." && echo "SENTRY_DSN=foo" > .env &&
+              echo "API_SERVER_URL=foo" >> .env &&
+              echo "API_GRAPHQL_SERVER_URL=foo" >> .env &&
+              echo "Creating env-config.js..." && ./env.sh &&
+              echo "Making public folder..." && mkdir /usr/share/nginx/html/public &&
+              echo "Copying env-config.js..." && cp ./src/generated/env-config.js /usr/share/nginx/html/public &&
+              echo "Starting nginx..." && nginx -g 'daemon off;'
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: {{ .Values.client.livenessPath }}
+              port: http
+              httpHeaders:
+                - name: Host
+                  value: {{ .Values.host }}
+            initialDelaySeconds: 20
+            periodSeconds: 20
+            failureThreshold: 6
+          readinessProbe:
+            httpGet:
+              path: {{ .Values.client.readinessPath }}
+              port: http
+              httpHeaders:
+                - name: Host
+                  value: {{ .Values.host }}
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            failureThreshold: 12
+          env:
+            - name: SENTRY_DSN
+              value: {{ .Values.sentryDsn }}
+            - name: API_SERVER_URL
+              value: {{ .Values.client.apiServerUrl }}
+            - name: API_GRAPHQL_SERVER_URL
+              value: {{ .Values.client.apiGraphqlServerUrl }}
+            - name: API_CSRFTOKEN_URL
+              value: {{ .Values.client.apiCsrftokenUrl }}
+      imagePullSecrets:
+        - name: gcr-json-key

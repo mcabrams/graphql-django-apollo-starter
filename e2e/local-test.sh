@@ -12,4 +12,4 @@ fi
 docker-compose up -d
 docker-compose exec server python manage.py bootstrap_fixtures
 cd e2e
-CYPRESS_baseUrl=http://localhost:8080 CYPRESS_SERVER_GRAPHQL_URL=http://localhost:8000/graphql cypress open
+CYPRESS_baseUrl=http://localhost:8080 CYPRESS_SERVER_GRAPHQL_URL=http://localhost:8000/api/graphql cypress open

@@ -5,6 +5,9 @@ client/.env
 node_modules
 env-config.js
 
+# GCR service account credential
+json-key-file.json
+
 # Testing artifacts (keep folders for CI, but not contents)
 e2e/cypress/videos/*
 !e2e/cypress/videos/.gitkeep
