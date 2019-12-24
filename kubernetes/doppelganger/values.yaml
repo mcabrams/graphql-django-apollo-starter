@@ -21,3 +21,6 @@ django:
 
 ingress:
   enabled: true
+
+redis:
+  password: foobar1234

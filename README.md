@@ -155,6 +155,8 @@ kubectl create secret docker-registry gcr-json-key \
 
 kubectl patch serviceaccount default \
   -p "{\"imagePullSecrets\": [{\"name\": \"gcr-json-key\"}]}"
+helm repo update
+helm dependency update ./kubernetes/doppelganger
 helm install doppelganger ./kubernetes/doppelganger --namespace=doppelganger
 kubectl get -n doppelganger ingresses.extensions -w
 ```

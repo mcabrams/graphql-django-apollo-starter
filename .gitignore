@@ -16,3 +16,6 @@ e2e/cypress/screenshots/*
 
 # Python stuff
 __pycache__
+
+# Helm sub-charts
+*.tgz
