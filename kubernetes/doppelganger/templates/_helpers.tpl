@@ -61,3 +61,22 @@ Create the name of the service account to use
     {{ default "default" .Values.serviceAccount.name }}
 {{- end -}}
 {{- end -}}
+
+{{- define "doppelganger.djangoStandardEnv" -}}
+env:
+  - name: DJANGO_ALLOWED_HOSTS
+    value: {{ .Values.host }}
+  - name: DJANGO_CORS_ORIGIN_WHITELIST
+    value: {{ printf "http://%s" .Values.host }}
+  - name: DJANGO_TRUSTED_ORIGINS
+    value: {{ .Values.host }}
+  - name: SENTRY_DSN
+    value: {{ .Values.sentryDsn }}
+  - name: REDIS_URL
+    value: redis://:{{ .Values.redis.password }}@doppelganger-redis-master:6379/0
+  - name: DATABASE_URL
+    valueFrom:
+      secretKeyRef:
+        name: server-credentials
+        key: database_url
+{{- end -}}
