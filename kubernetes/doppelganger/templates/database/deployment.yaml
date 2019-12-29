@@ -43,6 +43,8 @@ spec:
           volumeMounts:
             - mountPath: /var/lib/postgresql/data
               name: database-disk
+              # see: https://stackoverflow.com/questions/51168558/how-to-mount-a-postgresql-volume-using-aws-ebs-in-kubernete/51174380
+              subPath: postgres
           ports:
             - name: postgresql-5432
               containerPort: 5432

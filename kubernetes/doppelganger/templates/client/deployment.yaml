@@ -22,6 +22,7 @@ spec:
       containers:
         - name: client
           image: {{ .Values.client.image }}
+          imagePullPolicy: Always
           command:
             - /bin/bash
             - -c
@@ -31,6 +32,7 @@ spec:
               echo "Creating .env file..." && echo "SENTRY_DSN=foo" > .env &&
               echo "API_SERVER_URL=foo" >> .env &&
               echo "API_GRAPHQL_SERVER_URL=foo" >> .env &&
+              echo "API_CSRFTOKEN_URL=foo" >> .env &&
               echo "Creating env-config.js..." && ./env.sh &&
               echo "Making public folder..." && mkdir /usr/share/nginx/html/public &&
               echo "Copying env-config.js..." && cp ./src/generated/env-config.js /usr/share/nginx/html/public &&
