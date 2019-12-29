@@ -190,9 +190,65 @@ If review app, check to see if pushed commit is in pull request/branch, if it is
 update images
 
 ## Deployment
+### Digital Ocean
+
+Sign up and create a new project, and then create a new kubernetes cluster and
+get that and `doctl` setup per their instructions.
+
+Make sure you've set your context to be the correct DO cluster, i.e.:
+
 ```sh
-#TODO
+$ kubectl config get-contexts
+CURRENT   NAME                                        CLUSTER                                     AUTHINFO                                          NAMESPACE
+          do-sfo3-k8s-graphql-django-apollo-starter   do-sfo3-k8s-graphql-django-apollo-starter   do-sfo3-k8s-graphql-django-apollo-starter-admin
+*         minikube                                    minikube                                    minikube
+
+$ kubectl config use-context do-sfo3-k8s-graphql-django-apollo-starter
+Switched to context "do-sfo3-k8s-graphql-django-apollo-starter".
 ```
+
+To deploy first time run (make sure to set `host` in staging.values.yaml to
+your desired host name - i.e. the domain you will purchase later, or perhaps
+have already purchased):
+```sh
+kubectl create namespace doppelganger
+kubectl create secret docker-registry gcr-json-key \
+  --namespace doppelganger \
+  --docker-server=gcr.io \
+  --docker-username=_json_key \
+  --docker-password="$(cat ./json-key-file.json)" \
+  --docker-email=any@valid.email
+
+kubectl patch serviceaccount default \
+  -p "{\"imagePullSecrets\": [{\"name\": \"gcr-json-key\"}]}"
+helm repo update
+helm dependency update ./kubernetes/doppelganger
+helm install nginx-ingress stable/nginx-ingress --set controller.publishService.enabled=true --namespace=doppelganger
+helm install doppelganger ./kubernetes/doppelganger --namespace=doppelganger \
+  -f ./kubernetes/doppelganger/staging.values.yaml
+kubectl get services --namespace=doppelganger -o wide -w nginx-ingress-controller
+```
+
+Purchase a new domain, perhaps on namecheap.com.  Go ahead and setup digital ocean
+name servers so things can be configured through DO.  This guide is helpful:
+https://www.digitalocean.com/community/tutorials/how-to-point-to-digitalocean-nameservers-from-common-domain-registrars
+
+Once that has successfully propagated, you can set up a new A root record that
+directs to the load balance previously shown as the external-ip for the command:
+```sh
+kubectl get services --namespace=doppelganger -o wide -w nginx-ingress-controller
+```
+(you should see a load balancer with that IP listed in the digital ocean dropdown)
+
+### Subsequent deploys
+
+If you make changes to kubernetes manifest yaml files, you can run something like
+```sh
+helm upgrade -n doppelganger doppelganger ./kubernetes/doppelganger/ \
+  -f ./kubernetes/doppelganger/staging.values.yaml \
+  --version=0.2.1
+```
+in order to update the helm chart and kubernetes resources in the cluster.
 
 ## Notes
 - The client has two different dockerfiles: `client/Dockerfile` and
