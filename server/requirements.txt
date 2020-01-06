@@ -2,7 +2,7 @@
 # Base
 ######
 
-django==2.2.9
+django==3.0.2
 django-cors-headers==3.2.1
 django-environ==0.4.5
 
