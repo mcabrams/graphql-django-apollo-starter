@@ -7,7 +7,7 @@ services:
       # Context is this directory instead of ./client because Dockerfile
       # needs to copy schema.graphql file which is located in ./server
       context: .
-      dockerfile: ./client/Dockerfile.local
+      dockerfile: ./client/Dockerfile
     command: npm run start
     volumes:
       - ./client:/app

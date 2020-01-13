@@ -19,6 +19,24 @@ spec:
         stage: {{ .Values.stage }}
         app: server
     spec:
+      # This init container allows us to prepopulate the schema volume with the
+      # correct schema. This in turn is used by the client to create it's auto-
+      # generated code dependent on the graphql schema.
+      initContainers:
+        - name: load-schema
+          image: {{ .Values.django.image }}
+          imagePullPolicy: Always
+          command:
+            - /bin/bash
+            - -c
+            - |
+              echo "Generating schema..." && ./manage.py graphql_schema &&
+              echo "Copying schema to volume..." && cp schema/schema.json /schema
+          volumeMounts:
+            - mountPath: /schema
+              name: schema-disk
+          {{- include "doppelganger.djangoStandardEnv" . | nindent 10 }}
+
       containers:
         - name: server
           image: {{ .Values.django.image }}
@@ -48,5 +66,9 @@ spec:
             periodSeconds: 10
             failureThreshold: 12
           {{- include "doppelganger.djangoStandardEnv" . | nindent 10 }}
+      volumes:
+        - name: schema-disk
+          persistentVolumeClaim:
+            claimName: schema-disk
       imagePullSecrets:
         - name: gcr-json-key

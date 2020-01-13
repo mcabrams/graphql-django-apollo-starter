@@ -239,8 +239,4 @@ helm upgrade -n doppelganger doppelganger ./kubernetes/doppelganger/ \
 in order to update the helm chart and kubernetes resources in the cluster.
 
 ## Notes
-- The client has two different dockerfiles: `client/Dockerfile` and
-`client/Dockerfile.local`. The local postfixed Dockerfile is for use in docker
-compose (and is identical to the other, but does not include nginx in image),
-this is due to the fact that adding nginx wipes out development files and only
-maintains the built output assets.
+- TBD
