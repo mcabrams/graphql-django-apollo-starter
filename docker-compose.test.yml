@@ -57,7 +57,7 @@ services:
       - 8001:8001
 
   cypress:
-    image: "cypress/included:3.8.1"
+    image: "cypress/included:3.8.2"
     depends_on:
       - client-test
       - server-test
