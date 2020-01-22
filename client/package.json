@@ -23,7 +23,7 @@
     "@graphql-codegen/cli": "1.11.2",
     "@graphql-codegen/typescript-operations": "1.11.2",
     "@graphql-codegen/typescript-react-apollo": "1.11.2",
-    "@testing-library/jest-dom": "4.2.0",
+    "@testing-library/jest-dom": "5.0.2",
     "@testing-library/react": "9.4.0",
     "@types/jest": "24.9.0",
     "@types/reach__router": "1.2.6",
