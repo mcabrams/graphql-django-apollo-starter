@@ -228,7 +228,7 @@ secrets.  Enter the following secrets in github:
 - `GCLOUD_KEY`
   - (Create from
       https://console.cloud.google.com/apis/credentials/serviceaccountkey,
-      download the json file and copy output from `base64 -w 0
+      download the json file and copy output from `cat
       ~/Downloads/graphql-django-apollo-starter-838eb8bcda28.json` - you'll need
       to replace that filename with one you downloaded)
 

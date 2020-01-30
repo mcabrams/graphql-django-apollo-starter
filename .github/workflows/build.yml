@@ -7,15 +7,7 @@ jobs:
 
     steps:
     - uses: 'actions/checkout@v1'
-    - name: Login to gcloud registry
-      id: gcloud
-      uses: elgohr/gcloud-login-action@master
-      with:
-        account_key: ${{ secrets.GCLOUD_KEY }}
     - name: Publish images to Registry
       run: |
-            echo ${{ steps.gcloud.outputs.password }} | docker login \
-              -u ${{ steps.gcloud.outputs.username }} \
-              --password-stdin \
-              https://gcr.io
+            echo ${{ secrets.GCLOUD_KEY }} | docker login -u _json_key --password-stdin https://gcr.io
             make build push
