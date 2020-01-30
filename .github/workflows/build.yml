@@ -7,26 +7,15 @@ jobs:
 
     steps:
     - uses: 'actions/checkout@v1'
-
     - name: Login to gcloud registry
       id: gcloud
       uses: elgohr/gcloud-login-action@master
       with:
         account_key: ${{ secrets.GCLOUD_KEY }}
-    - name: Publish server to Registry
-      uses: elgohr/Publish-Docker-Github-Action@master
-      with:
-        name: graphql-django-apollo-starter/server
-        username: ${{ steps.gcloud.outputs.username }}
-        password: ${{ steps.gcloud.outputs.password }}
-        registry: gcr.io
-        context: ./server/
-    - name: Publish client to Registry
-      uses: elgohr/Publish-Docker-Github-Action@master
-      with:
-        name: graphql-django-apollo-starter/client
-        username: ${{ steps.gcloud.outputs.username }}
-        password: ${{ steps.gcloud.outputs.password }}
-        registry: gcr.io
-        context: ./
-        dockerfile: ./client/Dockerfile
+    - name: Publish images to Registry
+      run: |
+            echo ${{ steps.gcloud.outputs.password }} | docker login \
+              -u ${{ steps.gcloud.outputs.username }} \
+              --password-stdin \
+              https://gcr.io
+            make build push
