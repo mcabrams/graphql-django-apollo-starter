@@ -20,7 +20,7 @@ jobs:
         username: ${{ steps.gcloud.outputs.username }}
         password: ${{ steps.gcloud.outputs.password }}
         registry: gcr.io
-        context: ../../server/
+        context: ./server/
     - name: Publish client to Registry
       uses: elgohr/Publish-Docker-Github-Action@master
       with:
@@ -28,5 +28,5 @@ jobs:
         username: ${{ steps.gcloud.outputs.username }}
         password: ${{ steps.gcloud.outputs.password }}
         registry: gcr.io
-        context: ../../
-        dockerfile: ../../client/Dockerfile
+        context: ./
+        dockerfile: ./client/Dockerfile
