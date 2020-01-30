@@ -16,9 +16,9 @@ client:
   replicas: 1
   readinessPath: /
   livenessPath: /
-  apiServerUrl: http://graphql-django-apollo-starter.club/api
-  apiGraphqlServerUrl: http://graphql-django-apollo-starter.club/api/graphql
-  apiCsrftokenUrl: http://graphql-django-apollo-starter.club/api/admin
+  apiServerUrl: http://staging.graphql-django-apollo-starter.club/api
+  apiGraphqlServerUrl: http://staging.graphql-django-apollo-starter.club/api/graphql
+  apiCsrftokenUrl: http://staging.graphql-django-apollo-starter.club/api/admin
 
 django:
   image: 'gcr.io/graphql-django-apollo-starter/server:latest'
