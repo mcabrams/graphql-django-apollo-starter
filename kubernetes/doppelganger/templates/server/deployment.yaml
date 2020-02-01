@@ -24,7 +24,7 @@ spec:
       # generated code dependent on the graphql schema.
       initContainers:
         - name: load-schema
-          image: {{ .Values.django.image }}
+          image: {{ include "doppelganger.django.image" . }}
           imagePullPolicy: Always
           command:
             - /bin/bash
@@ -39,7 +39,7 @@ spec:
 
       containers:
         - name: server
-          image: {{ .Values.django.image }}
+          image: {{ include "doppelganger.django.image" . }}
           imagePullPolicy: Always
           ports:
             - name: http

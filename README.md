@@ -257,15 +257,5 @@ kubectl get services --namespace=doppelganger -o wide -w nginx-ingress-controlle
 ```
 (you should see a load balancer with that IP listed in the digital ocean dropdown)
 
-### Subsequent deploys
-
-If you make changes to kubernetes manifest yaml files, you can run something like
-```sh
-helm upgrade -n doppelganger doppelganger ./kubernetes/doppelganger/ \
-  -f ./kubernetes/doppelganger/staging.values.yaml \
-  --version=0.2.1
-```
-in order to update the helm chart and kubernetes resources in the cluster.
-
 ## Notes
 - TBD

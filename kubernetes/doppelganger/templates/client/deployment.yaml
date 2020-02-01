@@ -23,7 +23,7 @@ spec:
         # This init container builds the assets and moves vital directories and
         # files to an intermediate storage volume for use in the main container.
         - name: client-build
-          image: {{ .Values.client.image }}
+          image: {{ include "doppelganger.client.image" . }}
           imagePullPolicy: Always
           command:
             - /bin/bash
