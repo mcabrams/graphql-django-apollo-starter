@@ -212,6 +212,7 @@ kubectl patch serviceaccount default \
 helm repo update
 helm dependency update ./kubernetes/doppelganger
 helm install nginx-ingress stable/nginx-ingress --set controller.publishService.enabled=true --namespace=doppelganger
+helm install stable/nfs-server-provisioner --generate-name --version 0.4.0
 ./kubernetes/kubernetes_add_service_account_kubeconfig.sh github doppelganger
 ```
 

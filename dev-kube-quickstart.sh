@@ -12,5 +12,5 @@ kubectl patch serviceaccount default \
   -p "{\"imagePullSecrets\": [{\"name\": \"gcr-json-key\"}]}"
 helm repo update
 helm dependency update ./kubernetes/doppelganger
-helm install stable/nfs-server-provisioner --generate-name
+helm install stable/nfs-server-provisioner --generate-name --version 0.4.0
 helm install doppelganger ./kubernetes/doppelganger --namespace=doppelganger
