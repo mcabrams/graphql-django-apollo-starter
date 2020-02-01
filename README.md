@@ -209,6 +209,7 @@ kubectl create secret docker-registry gcr-json-key \
 
 kubectl patch serviceaccount default \
   -p "{\"imagePullSecrets\": [{\"name\": \"gcr-json-key\"}]}"
+helm repo add stable https://kubernetes-charts.storage.googleapis.com
 helm repo update
 helm dependency update ./kubernetes/doppelganger
 helm install nginx-ingress stable/nginx-ingress --set controller.publishService.enabled=true --namespace=doppelganger

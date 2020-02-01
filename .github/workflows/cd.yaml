@@ -9,7 +9,12 @@ jobs:
       uses: 'actions/checkout@v1'
 
     - name: 'Helm dependency updates'
-      run: curl -LO https://get.helm.sh/helm-v3.0.3-linux-amd64.tar.gz && tar -zxvf helm-v3.0.3-linux-amd64.tar.gz && ./linux-amd64/helm repo update && ./linux-amd64/helm dependency update ./kubernetes/doppelganger
+      run: |
+        curl -LO https://get.helm.sh/helm-v3.0.3-linux-amd64.tar.gz \
+        && tar -zxvf helm-v3.0.3-linux-amd64.tar.gz \
+        && ./linux-amd64/helm repo add stable https://kubernetes-charts.storage.googleapis.com \
+        && ./linux-amd64/helm repo update \
+        && ./linux-amd64/helm dependency update ./kubernetes/doppelganger
 
     - name: 'Deploy'
       uses: 'deliverybot/helm@v1'
