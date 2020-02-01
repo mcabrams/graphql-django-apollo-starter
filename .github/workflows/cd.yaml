@@ -8,6 +8,15 @@ jobs:
     - name: 'Checkout'
       uses: 'actions/checkout@v1'
 
+    - name: 'Setup Helm'
+      uses: azure/setup-helm@v1
+      with:
+        version: '3.0.1'
+      id: install
+
+    - name: 'Helm dependency updates'
+      run: helm repo update && helm dependency update ./kubernetes/doppelganger
+
     - name: 'Deploy'
       uses: 'deliverybot/helm@v1'
       with:
