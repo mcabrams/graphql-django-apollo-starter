@@ -8,14 +8,8 @@ jobs:
     - name: 'Checkout'
       uses: 'actions/checkout@v1'
 
-    - name: 'Setup Helm'
-      uses: azure/setup-helm@v1
-      with:
-        version: '3.0.1'
-      id: install
-
     - name: 'Helm dependency updates'
-      run: helm repo update && helm dependency update ./kubernetes/doppelganger
+      run: curl -LO https://get.helm.sh/helm-v3.0.3-linux-amd64.tar.gz && tar -zxvf helm-v3.0.3-linux-amd64.tar.gz && ./linux-amd64/helm repo update && ./linux-amd64/helm dependency update ./kubernetes/doppelganger
 
     - name: 'Deploy'
       uses: 'deliverybot/helm@v1'
