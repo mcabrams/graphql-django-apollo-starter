@@ -12,7 +12,7 @@ jobs:
       with:
         # Task remove means to remove the helm release.
         helm: helm3
-        namespace: doppelganger
+        namespace: 'review-doppelganger-${{ github.event.pull_request.number }}'
         chart: 'kubernetes/doppelganger'
         task: 'remove'
         release: 'review-doppelganger-${{ github.event.pull_request.number }}'
