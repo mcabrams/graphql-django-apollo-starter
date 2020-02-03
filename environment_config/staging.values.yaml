@@ -12,7 +12,7 @@ sentryDsn: https://19d74ebe7b174d399ebcb96320129b6b@sentry.io/1827306
 storageClassName: do-block-storage
 
 client:
-  image:  'gcr.io/graphql-django-apollo-starter/client:latest'
+  image:  'gcr.io/graphql-django-apollo-starter/client'
   replicas: 1
   readinessPath: /
   livenessPath: /
@@ -21,7 +21,7 @@ client:
   apiCsrftokenUrl: http://staging.graphql-django-apollo-starter.club/api/admin
 
 django:
-  image: 'gcr.io/graphql-django-apollo-starter/server:latest'
+  image: 'gcr.io/graphql-django-apollo-starter/server'
   replicas: 1
   readinessPath: /api/admin
   livenessPath: /api/admin
