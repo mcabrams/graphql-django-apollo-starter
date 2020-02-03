@@ -1,0 +1,29 @@
+name: 'Deploy'
+on: ['deployment']
+
+jobs:
+  deployment:
+    runs-on: 'ubuntu-latest'
+    steps:
+    - name: 'Checkout'
+      uses: 'actions/checkout@v1'
+
+    - name: 'Helm dependency updates'
+      run: |
+        curl -LO https://get.helm.sh/helm-v3.0.3-linux-amd64.tar.gz \
+        && tar -zxvf helm-v3.0.3-linux-amd64.tar.gz \
+        && ./linux-amd64/helm repo add stable https://kubernetes-charts.storage.googleapis.com \
+        && ./linux-amd64/helm repo update \
+        && ./linux-amd64/helm dependency update ./kubernetes/doppelganger
+
+    - name: 'Deploy'
+      uses: 'deliverybot/helm@v1'
+      with:
+        helm: helm3
+        namespace: doppelganger
+        chart: 'kubernetes/doppelganger'
+        token: '${{ github.token }}'
+        secrets: '${{ toJSON(secrets) }}'
+        version: '${{ github.sha }}'
+      env:
+        KUBECONFIG_FILE: '${{ secrets.KUBECONFIG }}'

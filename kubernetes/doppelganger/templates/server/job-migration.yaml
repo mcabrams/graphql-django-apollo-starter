@@ -11,7 +11,7 @@ spec:
     spec:
       containers:
         - name: django
-          image: {{ .Values.django.image }}
+          image: {{ include "doppelganger.django.image" . }}
           command:
             - /bin/bash
             - -c

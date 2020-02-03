@@ -13,6 +13,13 @@ jobs:
     steps:
     - uses: actions/checkout@v1
 
+    - name: Build and push images to registry
+      env:
+        GCLOUD_KEY: ${{ secrets.GCLOUD_KEY }}
+      run: |
+            echo $GCLOUD_KEY | docker login -u _json_key --password-stdin https://gcr.io
+            make build push
+
     - name: make .env files
       run: |
             cp .env.example .env  # make default .env file, sensitive values will be set in admin

@@ -80,3 +80,15 @@ env:
         name: server-credentials
         key: database_url
 {{- end -}}
+
+{{- define "doppelganger.appVersion" -}}
+{{ .Values.appVersion | default "latest" }}
+{{- end -}}
+
+{{- define "doppelganger.client.image" -}}
+{{ .Values.client.image }}:{{- include "doppelganger.appVersion" . }}
+{{- end -}}
+
+{{- define "doppelganger.django.image" -}}
+{{ .Values.django.image }}:{{- include "doppelganger.appVersion" . }}
+{{- end -}}

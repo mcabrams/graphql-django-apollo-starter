@@ -209,13 +209,43 @@ kubectl create secret docker-registry gcr-json-key \
 
 kubectl patch serviceaccount default \
   -p "{\"imagePullSecrets\": [{\"name\": \"gcr-json-key\"}]}"
+helm repo add stable https://kubernetes-charts.storage.googleapis.com
 helm repo update
 helm dependency update ./kubernetes/doppelganger
 helm install nginx-ingress stable/nginx-ingress --set controller.publishService.enabled=true --namespace=doppelganger
-helm install doppelganger ./kubernetes/doppelganger --namespace=doppelganger \
-  -f ./kubernetes/doppelganger/staging.values.yaml
+helm install stable/nfs-server-provisioner --generate-name --version 0.4.0
+./kubernetes/kubernetes_add_service_account_kubeconfig.sh github doppelganger
+```
+
+That last line will output a path to a kubeconfig that you'll want to save
+for the next step.
+
+You'll then want to add your gcloud authentication and kubeconfig info to github
+secrets.  Enter the following secrets in github:
+
+- `KUBECONFIG`
+  - (This can be retreived from the path that is output from the last command
+      that ran).
+
+- `GCLOUD_KEY`
+  - (Create from
+      https://console.cloud.google.com/apis/credentials/serviceaccountkey,
+      you'll probably want to create a new service account with role storage admin
+      and name of something like github-storage-admin -
+      download the json file and copy output from `cat
+      ~/Downloads/graphql-django-apollo-starter-838eb8bcda28.json` - you'll need
+      to replace that filename with one you downloaded)
+
+You can run
+
+```sh
 kubectl get services --namespace=doppelganger -o wide -w nginx-ingress-controller
 ```
+
+in order to find the external ip of the nginx ingress.
+
+Copy the created service account into your GitHub repository secrets with the
+name `KUBECONFIG` (this comes from the previously run `./kubernetes/kubernetes_add_service_account_kubeconfig.sh` script).
 
 Purchase a new domain, perhaps on namecheap.com.  Go ahead and setup digital ocean
 name servers so things can be configured through DO.  This guide is helpful:
@@ -227,16 +257,6 @@ directs to the load balance previously shown as the external-ip for the command:
 kubectl get services --namespace=doppelganger -o wide -w nginx-ingress-controller
 ```
 (you should see a load balancer with that IP listed in the digital ocean dropdown)
-
-### Subsequent deploys
-
-If you make changes to kubernetes manifest yaml files, you can run something like
-```sh
-helm upgrade -n doppelganger doppelganger ./kubernetes/doppelganger/ \
-  -f ./kubernetes/doppelganger/staging.values.yaml \
-  --version=0.2.1
-```
-in order to update the helm chart and kubernetes resources in the cluster.
 
 ## Notes
 - TBD
