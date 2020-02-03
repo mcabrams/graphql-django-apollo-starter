@@ -10,6 +10,7 @@ canary:
       - "./environment_config/production.values.yaml"
       - "./environment_config/_common.values.yaml"
     release: production-doppelganger
+    namespace: production-doppelganger
     track: canary
     values:
       appVersion: ${{ github.sha  }}
@@ -29,6 +30,7 @@ production:
     # Remove the canary deployment if it exists when doing a full prod deploy.
     remove_canary: true
     release: production-doppelganger
+    namespace: production-doppelganger
     track: stable
     values:
       appVersion: ${{ github.sha  }}
@@ -44,6 +46,7 @@ staging:
       - "./environment_config/staging.values.yaml"
       - "./environment_config/_common.values.yaml"
     release: staging-doppelganger
+    namespace: staging-doppelganger
     track: stable
     values:
       appVersion: ${{ github.sha  }}
@@ -64,6 +67,7 @@ review:
       - "./environment_config/review.values.yaml"
       - "./environment_config/_common.values.yaml"
     release: review-doppelganger-${{ pr }}
+    namespace: review-doppelganger-${{ pr }}
     track: stable
     values:
       appVersion: ${{ github.sha  }}
