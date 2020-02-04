@@ -200,6 +200,8 @@ your desired host name - i.e. the domain you will purchase later, or perhaps
 have already purchased):
 ```sh
 kubectl create namespace doppelganger
+kubectl create namespace staging-doppelganger
+kubectl create namespace production-doppelganger
 kubectl create secret docker-registry gcr-json-key \
   --namespace doppelganger \
   --docker-server=gcr.io \
@@ -212,7 +214,7 @@ kubectl patch serviceaccount default \
 helm repo add stable https://kubernetes-charts.storage.googleapis.com
 helm repo update
 helm dependency update ./kubernetes/doppelganger
-helm install nginx-ingress stable/nginx-ingress --set controller.publishService.enabled=true --namespace=doppelganger
+helm install nginx-ingress stable/nginx-ingress --set controller.publishService.enabled=true
 helm install stable/nfs-server-provisioner --generate-name --version 0.4.0
 ./kubernetes/kubernetes_add_service_account_kubeconfig.sh github doppelganger
 ```
