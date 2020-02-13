@@ -1,4 +1,6 @@
 # Graphql Django Apollo Starter
+[![Project Board](https://img.shields.io/badge/project%20board-%20-green.svg)](https://github.com/mcabrams/graphql-django-apollo-starter/projects)
+
 This repository picks up where I left off in my previous repository: https://github.com/mcabrams/doppelganger (hence the lingering doppelganger references).
 
 > While this repository is not yet in template form (see https://github.com/mcabrams/graphql-django-apollo-starter/issues/66), it is intended to be a starting point for new projects using a stack of Django (Python), PostgresQL, GraphQL, React, Apollo, Redux - leveraging kubernetes as well as docker compose.
