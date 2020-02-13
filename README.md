@@ -1,5 +1,5 @@
 # Graphql Django Apollo Starter
-[![Project Board](https://img.shields.io/badge/project%20board-%20-green.svg)](https://github.com/mcabrams/graphql-django-apollo-starter/projects)
+[![Project Board](https://img.shields.io/badge/project%20board-%20-green.svg)](https://github.com/mcabrams/graphql-django-apollo-starter/projects/1)
 
 This repository picks up where I left off in my previous repository: https://github.com/mcabrams/doppelganger (hence the lingering doppelganger references).
 
