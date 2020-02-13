@@ -1,6 +1,11 @@
 # Graphql Django Apollo Starter
+This repository picks up where I left off in my previous repository: https://github.com/mcabrams/doppelganger (hence the lingering doppelganger references).
 
-- Create a new repo based off of this.
+> While this repository is not yet in template form (see #66), it is intended to be a starting point for new projects using a stack of Django (Python), PostgresQL, GraphQL, React, Apollo, Redux - leveraging kubernetes as well as docker compose.
+
+## Starting a new project based off this
+
+- Fork a new repo based off of this.
 - Do a grep for `doppelganger` and `graphql-django-apollo-starter` and replace
 each with desired app name. Make sure to do case insensitive search.
 - Create a new google cloud project with your new app name.
