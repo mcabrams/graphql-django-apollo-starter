@@ -38,7 +38,7 @@ sentry-sdk==0.14.1
 # Local
 #######
 
-django-extensions==2.2.6
+django-extensions==2.2.8
 django-debug-toolbar==2.2
 
 #########
