@@ -236,14 +236,19 @@ secrets.  Enter the following secrets in github:
   - (This can be retreived from the path that is output from the last command
       that ran).
 
-- `GCLOUD_KEY`
+- `GCP_SA_KEY`
   - (Create from
       https://console.cloud.google.com/apis/credentials/serviceaccountkey,
       you'll probably want to create a new service account with role storage admin
       and name of something like github-storage-admin -
       download the json file and copy output from `cat
-      ~/Downloads/graphql-django-apollo-starter-838eb8bcda28.json` - you'll need
-      to replace that filename with one you downloaded)
+      ~/Downloads/graphql-django-apollo-starter-e114e5df1222.json | base64` -
+      you'll need to replace that filename with one you downloaded)
+
+- `GCP_SA_EMAIL`
+  - Use your client email associated with the key you generated. You could run
+  `cat ~/Downloads/graphql-django-apollo-starter-e114e5df1222.json` (remember
+  to change file name as usual) and look for client_email entry to see it.
 
 You can run
 
