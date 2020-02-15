@@ -25,6 +25,6 @@ jobs:
         token: '${{ github.token }}'
         secrets: '${{ toJSON(secrets) }}'
         version: '${{ github.sha }}'
-        timeout: 500
+        timeout: '8m0s'
       env:
         KUBECONFIG_FILE: '${{ secrets.KUBECONFIG }}'
