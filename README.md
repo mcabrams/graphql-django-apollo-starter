@@ -93,61 +93,22 @@ docker push gcr.io/graphql-django-apollo-starter/client:latest
 
 ### Begin here if setting up first time
 
-Set up kubernetes, minikube, etc.  Start minikube.
+Set up kubernetes, minikube, helm, etc.  Start minikube.
 
 You'll probably want to config minikube to have 8192mb of memory, and
 default it to using vm-driver (i.e. virtualbox).
+
+```sh
+# this line is necessary
+minikube addons enable ingress
+# this is optional
+minikube config set memory 8192
+```
 
 You'll want to grab the gcr json key by creating a service account in google
 cloud (along with corresponding project, first) and downloading the json key
 file.  Move this to the root repository directory and name it
 `json-key-file.json`.
-
-Encode database secrets
-
-```sh
-# username
-echo -n 'postgresadmin' | base64
-# password
-echo -n 'admin123' | base64
-```
-
-Create a `secrets.yaml` in `./kubernetes/doppelganger/templates/database` and
-fill in like:
-
-```
-apiVersion: v1
-kind: Secret
-metadata:
-  name: database-credentials
-type: Opaque
-data:
-  user: # fill in user_encoded
-  password: # fill in password_encoded
-```
-
-Encode server secrets
-
-```sh
-# database_url
-echo -n 'postgresql://postgresadmin:admin123@database-service:5432/postgresdb' | base64
-```
-
-Create a `secrets.yaml` in `./kubernetes/doppelganger/templates/server` and
-fill in like:
-
-```
-apiVersion: v1
-kind: Secret
-metadata:
-  name: server-credentials
-type: Opaque
-data:
-  database_url: # fill in database_url_encoded
-```
-
-Then run the quick start command below.
-
 
 ### Quickstart (if killed minikube and already created secrets files):
 
