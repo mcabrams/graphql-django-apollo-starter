@@ -163,28 +163,13 @@ $ kubectl config use-context do-sfo3-k8s-graphql-django-apollo-starter
 Switched to context "do-sfo3-k8s-graphql-django-apollo-starter".
 ```
 
-To deploy first time run (make sure to set `host` in staging.values.yaml to
+To deploy first time:
+- install jq (i.e. `berw install jq`)
+- run (make sure to set `host` in staging.values.yaml to
 your desired host name - i.e. the domain you will purchase later, or perhaps
 have already purchased):
 ```sh
-kubectl create namespace doppelganger
-kubectl create namespace staging-doppelganger
-kubectl create namespace production-doppelganger
-kubectl create secret docker-registry gcr-json-key \
-  --namespace doppelganger \
-  --docker-server=gcr.io \
-  --docker-username=_json_key \
-  --docker-password="$(cat ./json-key-file.json)" \
-  --docker-email=any@valid.email
-
-kubectl patch serviceaccount default \
-  -p "{\"imagePullSecrets\": [{\"name\": \"gcr-json-key\"}]}"
-helm repo add stable https://kubernetes-charts.storage.googleapis.com
-helm repo update
-helm dependency update ./kubernetes/doppelganger
-helm install nginx-ingress stable/nginx-ingress --set controller.publishService.enabled=true
-helm install stable/nfs-server-provisioner --generate-name --version 0.4.0
-./kubernetes/kubernetes_add_service_account_kubeconfig.sh github doppelganger
+./first-deploy-quickstart.sh
 ```
 
 That last line will output a path to a kubeconfig that you'll want to save
