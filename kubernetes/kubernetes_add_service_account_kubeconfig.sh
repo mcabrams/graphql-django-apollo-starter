@@ -87,6 +87,10 @@ set_kube_config_values() {
     sed -e "s|my_account|${SERVICE_ACCOUNT_NAME}|g" -e "s|my_namespace|${NAMESPACE}|g" \
     ./kubernetes/permissions-template.yaml > ./kubernetes/permissions_${SERVICE_ACCOUNT_NAME}.yaml
     kubectl apply -f ./kubernetes/permissions_${SERVICE_ACCOUNT_NAME}.yaml
+
+    # don't really need this file sticking around at this point, so go ahead
+    # and remove it
+    rm ./kubernetes/permissions_${SERVICE_ACCOUNT_NAME}.yaml
     printf "done"
 }
 
