@@ -5,8 +5,24 @@
 kubectl create namespace doppelganger
 kubectl create namespace staging-doppelganger
 kubectl create namespace production-doppelganger
+
+# Need to create secret for each namespace we will run pods in
 kubectl create secret docker-registry gcr-json-key \
   --namespace doppelganger \
+  --docker-server=gcr.io \
+  --docker-username=_json_key \
+  --docker-password="$(cat ./json-key-file.json)" \
+  --docker-email=any@valid.email
+
+kubectl create secret docker-registry gcr-json-key \
+  --namespace staging-doppelganger \
+  --docker-server=gcr.io \
+  --docker-username=_json_key \
+  --docker-password="$(cat ./json-key-file.json)" \
+  --docker-email=any@valid.email
+
+kubectl create secret docker-registry gcr-json-key \
+  --namespace production-doppelganger \
   --docker-server=gcr.io \
   --docker-username=_json_key \
   --docker-password="$(cat ./json-key-file.json)" \
