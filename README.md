@@ -199,7 +199,7 @@ secrets.  Enter the following secrets in github:
 You can run
 
 ```sh
-kubectl get services --namespace=doppelganger -o wide -w nginx-ingress-controller
+kubectl get services -o wide -w nginx-ingress-controller
 ```
 
 in order to find the external ip of the nginx ingress.
@@ -214,9 +214,11 @@ https://www.digitalocean.com/community/tutorials/how-to-point-to-digitalocean-na
 Once that has successfully propagated, you can set up a new A root record that
 directs to the load balance previously shown as the external-ip for the command:
 ```sh
-kubectl get services --namespace=doppelganger -o wide -w nginx-ingress-controller
+kubectl get services -o wide -w nginx-ingress-controller
 ```
 (you should see a load balancer with that IP listed in the digital ocean dropdown)
+
+You'll want to create records for staging and production appropriately.
 
 ## Notes
 - TBD
