@@ -30,7 +30,7 @@ redis:
   password: foobar1234
   master:
     persistence:
-      size: 1Gi
+      size: 100Mi
   slave:
     persistence:
-      size: 1Gi
+      size: 100Mi
