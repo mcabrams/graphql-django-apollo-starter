@@ -8,7 +8,7 @@ django-environ==0.4.5
 
 # GraphQL
 django-graphql-jwt==0.3.0
-graphene-django==2.8.2
+graphene-django==2.9.0
 
 # Technically graphene and graphql-core should not have to be specified here,
 # but running into a compatibility issue unless it is locked as pre 3.0
