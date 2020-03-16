@@ -216,9 +216,10 @@ directs to the load balance previously shown as the external-ip for the command:
 ```sh
 kubectl get services -o wide -w nginx-ingress-controller
 ```
-(you should see a load balancer with that IP listed in the digital ocean dropdown)
+(you should see a load balancer with that IP listed in the digital ocean dropdown).
 
 You'll want to create records for staging and production appropriately.
+You can use that same ip for other A records (for example: staging.graphql-django-apollo-starter.club)
 
 ## Notes
 - TBD
