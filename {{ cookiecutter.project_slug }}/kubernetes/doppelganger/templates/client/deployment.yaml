@@ -1,3 +1,4 @@
+{% raw %}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -107,3 +108,4 @@ spec:
             claimName: schema-disk
       imagePullSecrets:
         - name: gcr-json-key
+{% endraw %}

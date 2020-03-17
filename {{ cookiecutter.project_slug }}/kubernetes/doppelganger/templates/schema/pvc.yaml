@@ -1,3 +1,4 @@
+{% raw %}
 # This pvc serves the client and server by sharing the graphql schema generated
 # on the server with the client.
 ---
@@ -15,3 +16,4 @@ spec:
     requests:
       storage: 50Mi
   storageClassName: "nfs"
+{% endraw %}

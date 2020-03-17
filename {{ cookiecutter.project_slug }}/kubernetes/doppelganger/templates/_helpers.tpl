@@ -1,3 +1,4 @@
+{% raw %}
 {{/* vim: set filetype=mustache: */}}
 {{/*
 Expand the name of the chart.
@@ -92,3 +93,4 @@ env:
 {{- define "doppelganger.django.image" -}}
 {{ .Values.django.image }}:{{- include "doppelganger.appVersion" . }}
 {{- end -}}
+{% endraw %}
