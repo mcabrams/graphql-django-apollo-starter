@@ -13,7 +13,7 @@ jobs:
         # Task remove means to remove the helm release.
         helm: helm3
         namespace: review-doppelganger-${{ github.event.pull_request.number }}
-        chart: kubernetes/doppelganger
+        chart: ./graphql_django_apollo_starter/kubernetes/doppelganger
         task: remove
         release: review-doppelganger-${{ github.event.pull_request.number }}
         version: ${{ github.sha }}

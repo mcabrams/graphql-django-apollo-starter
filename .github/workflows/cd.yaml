@@ -15,7 +15,11 @@ jobs:
     - name: Install dependencies
       run: pip install -r requirements.txt
 
+    - name: Generate cookie cut project
+      run: cookiecutter . --no-input
+
     - name: Helm dependency updates
+      working-directory: ./graphql_django_apollo_starter
       run: |
         curl -LO https://get.helm.sh/helm-v3.0.3-linux-amd64.tar.gz \
         && tar -zxvf helm-v3.0.3-linux-amd64.tar.gz \
@@ -28,7 +32,7 @@ jobs:
       with:
         helm: helm3
         namespace: doppelganger
-        chart: kubernetes/doppelganger
+        chart: graphql_django_apollo_starter/kubernetes/doppelganger
         token: ${{ github.token }}
         secrets: ${{ toJSON(secrets) }}
         version: ${{ github.sha }}

@@ -14,14 +14,14 @@ jobs:
         && tar -zxvf helm-v3.0.3-linux-amd64.tar.gz \
         && ./linux-amd64/helm repo add stable https://kubernetes-charts.storage.googleapis.com \
         && ./linux-amd64/helm repo update \
-        && ./linux-amd64/helm dependency update ./kubernetes/doppelganger
+        && ./linux-amd64/helm dependency update ./kubernetes/{{ cookiecutter.kubernetes_project }}
 
     - name: 'Deploy'
       uses: 'deliverybot/helm@v1'
       with:
         helm: helm3
-        namespace: doppelganger
-        chart: 'kubernetes/doppelganger'
+        namespace: {{ cookiecutter.kubernetes_project }}
+        chart: kubernetes/{{ cookiecutter.kubernetes_project }}
         token: ${{ "{{" }} github.token {{ "}}" }}
         secrets: ${{ "{{" }} toJSON(secrets) {{ "}}" }}
         version: ${{ "{{" }} github.sha {{ "}}" }}
