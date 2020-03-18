@@ -5,7 +5,7 @@ from graphql_jwt.testcases import (
     JSONWebTokenTestCase as GraphqlJWTJSONWebTokenTestCase,
 )
 
-from doppelganger.schema import schema
+from {{ cookiecutter.project_slug }}.schema import schema
 
 
 class GraphQLTestCase(GrapheneDjangoGraphQLTestCase):

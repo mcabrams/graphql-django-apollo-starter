@@ -2,7 +2,7 @@ version: '3'
 
 services:
   client-test:
-    image: doppelganger_client # use client image from docker-compose.yml
+    image: {{ cookiecutter.project_slug }}_client # use client image from docker-compose.yml
     environment:
       - API_SERVER_URL=http://server-test:8001 # use server-test port
       - API_GRAPHQL_SERVER_URL=http://server-test:8001/api/graphql # use server-test port

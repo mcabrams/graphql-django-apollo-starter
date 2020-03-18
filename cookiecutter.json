@@ -1,6 +1,17 @@
 {
   "project_name": "Grapqhl Django Apollo Starter",
   "project_slug": "{{ cookiecutter.project_name.lower()|replace(' ', '_')|replace('-', '_')|replace('.', '_')|trim() }}",
+  "local_domain_name": "graphql-django-apollo-starter.local",
+  "domain_name": "graphql-django-apollo-starter.club",
+  "production_domain_name": "{{ cookiecutter.domain_name }}",
+  "staging_domain_name": "staging.{{ cookiecutter.domain_name }}",
+  "docker_registry_hostname": "gcr.io",
+  "docker_registry_project_id": "graphql-django-apollo-starter",
+  "docker_registry_path": "{{ cookiecutter.docker_registry_hostname }}/{{ cookiecutter.docker_registry_project_id }}",
+  "kubernetes_project": "doppelganger",
+  "kubernetes_base_namespace": "{{ cookiecutter.kubernetes_project }}",
+  "kubernetes_staging_namespace": "staging-{{ cookiecutter.kubernetes_project }}",
+  "kubernetes_production_namespace": "production-{{ cookiecutter.kubernetes_project }}",
   "_copy_without_render": [
           "*.tsx"
       ]

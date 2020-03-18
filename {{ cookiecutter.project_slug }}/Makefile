@@ -1,7 +1,7 @@
 SHELL := bash
 
-DOCKER_REPOSITORY := gcr.io
-PROJECT_NAME      := graphql-django-apollo-starter
+DOCKER_REPOSITORY := {{ cookiecutter.docker_registry_hostname }}
+PROJECT_NAME      := {{ cookiecutter.docker_registry_project_id }}
 SERVER_NAME       := ${DOCKER_REPOSITORY}/${PROJECT_NAME}/server
 CLIENT_NAME       := ${DOCKER_REPOSITORY}/${PROJECT_NAME}/client
 TAG               := ${shell git log -1 --pretty=%H}

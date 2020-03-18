@@ -3,7 +3,7 @@
 # TO MATCH YOUR ENVIRONMENT AND DESIRED CONFIGURATION!!!
 #
 # Global settings
-host: staging.graphql-django-apollo-starter.club
+host: {{ cookiecutter.staging_domain_name }}
 stage: staging
 sentryDsn: https://19d74ebe7b174d399ebcb96320129b6b@sentry.io/1827306
 
@@ -12,16 +12,16 @@ sentryDsn: https://19d74ebe7b174d399ebcb96320129b6b@sentry.io/1827306
 storageClassName: do-block-storage
 
 client:
-  image:  'gcr.io/graphql-django-apollo-starter/client'
+  image:  '{{ cookiecutter.docker_registry_path }}/client'
   replicas: 1
   readinessPath: /
   livenessPath: /
-  apiServerUrl: http://staging.graphql-django-apollo-starter.club/api
-  apiGraphqlServerUrl: http://staging.graphql-django-apollo-starter.club/api/graphql
-  apiCsrftokenUrl: http://staging.graphql-django-apollo-starter.club/api/admin
+  apiServerUrl: http://{{ cookiecutter.staging_domain_name }}/api
+  apiGraphqlServerUrl: http://{{ cookiecutter.staging_domain_name }}/api/graphql
+  apiCsrftokenUrl: http://{{ cookiecutter.staging_domain_name }}/api/admin
 
 django:
-  image: 'gcr.io/graphql-django-apollo-starter/server'
+  image: '{{ cookiecutter.docker_registry_path }}/server'
   replicas: 1
   readinessPath: /api/admin
   livenessPath: /api/admin

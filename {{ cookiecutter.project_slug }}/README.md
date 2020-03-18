@@ -1,15 +1,9 @@
-# Graphql Django Apollo Starter
+# {{ cookiecutter.project_name }}
 [![Project Board](https://img.shields.io/badge/project%20board-%20-green.svg)](https://github.com/mcabrams/graphql-django-apollo-starter/projects/1)
-
-This repository picks up where I left off in my previous repository: https://github.com/mcabrams/doppelganger (hence the lingering doppelganger references).
-
-> While this repository is not yet in template form (see https://github.com/mcabrams/graphql-django-apollo-starter/issues/66), it is intended to be a starting point for new projects using a stack of Django (Python), PostgresQL, GraphQL, React, Apollo, Redux - leveraging kubernetes as well as docker compose.
 
 ## Starting a new project based off this
 
 - Fork a new repo based off of this.
-- Do a grep for `doppelganger` and `graphql-django-apollo-starter` and replace
-each with desired app name. Make sure to do case insensitive search.
 - Create a new google cloud project with your new app name.
 - Create a new service account for the google cloud project, and generate a new
 json key file, follow steps here (roughly):
@@ -79,12 +73,7 @@ you are currently on the correct cloud project (should match app name).
 
 ```sh
 gcloud auth configure-docker
-docker build ./server/ -t doppelganger_server
-docker tag doppelganger_server:latest gcr.io/graphql-django-apollo-starter/server:latest
-docker push gcr.io/graphql-django-apollo-starter/server:latest
-docker build . -f client/Dockerfile -t doppelganger_client
-docker tag doppelganger_client:latest gcr.io/graphql-django-apollo-starter/client:latest
-docker push gcr.io/graphql-django-apollo-starter/client:latest
+make build push
 ```
 (https://cloud.google.com/container-registry/docs/pushing-and-pulling)
 
@@ -114,7 +103,7 @@ file.  Move this to the root repository directory and name it
 
 ```sh
 ./dev-kube-quickstart.sh
-kubectl get -n doppelganger ingresses.extensions -w
+kubectl get -n {{ cookiecutter.project_slug }} ingresses.extensions -w
 ```
 
 Once address is populated, add it to your `/etc/hosts`
@@ -123,18 +112,18 @@ i.e.
 
 ```sh
 NAME             HOSTS                ADDRESS   PORTS   AGE
-server-ingress   doppelganger.local             80      12s
-server-ingress   doppelganger.local   192.168.99.121   80      33s
+server-ingress   {{ cookiecutter.local_domain_name }}             80      12s
+server-ingress   {{ cookiecutter.local_domain_name }}   192.168.99.121   80      33s
 ```
 
 would mean you should add this line to `/etc/hosts`:
 
 ```
-192.168.99.121 doppelganger.local
+192.168.99.121 {{ cookiecutter.local_domain_name }}
 ```
 
 If you make changes to kubernetes manifest yaml files, you can run something like
-`helm upgrade -n doppelganger doppelganger ./kubernetes/doppelganger/ --version=0.2.0`
+`helm upgrade -n {{ cookiecutter.kubernetes_project }} {{ cookiecutter.kubernetes_project }} ./kubernetes/{{ cookiecutter.kubernetes_project }}/ --version=0.2.0`
 in order to update the helm chart and kubernetes resources in the cluster.
 
 ## Proposed CI
@@ -156,11 +145,11 @@ Make sure you've set your context to be the correct DO cluster, i.e.:
 ```sh
 $ kubectl config get-contexts
 CURRENT   NAME                                        CLUSTER                                     AUTHINFO                                          NAMESPACE
-          do-sfo3-k8s-graphql-django-apollo-starter   do-sfo3-k8s-graphql-django-apollo-starter   do-sfo3-k8s-graphql-django-apollo-starter-admin
+          do-sfo3-k8s-{{ cookiecutter.kubernetes_project }}   do-sfo3-k8s-{{ cookiecutter.kubernetes_project}}   do-sfo3-k8s-{{ cookiecutter.kubernetes_project }}-admin
 *         minikube                                    minikube                                    minikube
 
-$ kubectl config use-context do-sfo3-k8s-graphql-django-apollo-starter
-Switched to context "do-sfo3-k8s-graphql-django-apollo-starter".
+$ kubectl config use-context do-sfo3-k8s-{{ cookiecutter.kubernetes_project }}
+Switched to context "do-sfo3-k8s-{{ cookiecutter.kubernetes_project }}".
 ```
 
 To deploy first time:
@@ -188,12 +177,12 @@ secrets.  Enter the following secrets in github:
       you'll probably want to create a new service account with role storage admin
       and name of something like github-storage-admin -
       download the json file and copy output from `cat
-      ~/Downloads/graphql-django-apollo-starter-e114e5df1222.json | base64` -
+      ~/Downloads/{{ cookiecutter.kubernetes_project }}-e114e5df1222.json | base64` -
       you'll need to replace that filename with one you downloaded)
 
 - `GCP_SA_EMAIL`
   - Use your client email associated with the key you generated. You could run
-  `cat ~/Downloads/graphql-django-apollo-starter-e114e5df1222.json` (remember
+  `cat ~/Downloads/{{ cookiecutter.kubernetes_project }}-e114e5df1222.json` (remember
   to change file name as usual) and look for client_email entry to see it.
 
 You can run
@@ -219,7 +208,7 @@ kubectl get services -o wide -w nginx-ingress-controller
 (you should see a load balancer with that IP listed in the digital ocean dropdown).
 
 You'll want to create records for staging and production appropriately.
-You can use that same ip for other A records (for example: staging.graphql-django-apollo-starter.club)
+You can use that same ip for other A records (for example: {{ cookiecutter.staging_domain_name }})
 
 ## Notes
 - TBD

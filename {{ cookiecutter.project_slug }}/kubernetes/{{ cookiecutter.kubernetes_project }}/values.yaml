@@ -1,6 +1,6 @@
 ---
 # Global settings
-host: doppelganger.local
+host: {{ cookiecutter.local_domain_name }}
 stage: dev
 sentryDsn: https://19d74ebe7b174d399ebcb96320129b6b@sentry.io/1827306
 
@@ -9,16 +9,16 @@ sentryDsn: https://19d74ebe7b174d399ebcb96320129b6b@sentry.io/1827306
 # storageClassName: do-block-storage
 
 client:
-  image:  'gcr.io/graphql-django-apollo-starter/client'
+  image:  '{{ cookiecutter.docker_registry_path }}/client'
   replicas: 1
   readinessPath: /
   livenessPath: /
-  apiServerUrl: http://doppelganger.local/api
-  apiGraphqlServerUrl: http://doppelganger.local/api/graphql
-  apiCsrftokenUrl: http://doppelganger.local/api/admin
+  apiServerUrl: http://{{ cookiecutter.local_domain_name }}/api
+  apiGraphqlServerUrl: http://{{ cookiecutter.local_domain_name }}/api/graphql
+  apiCsrftokenUrl: http://{{ cookiecutter.local_domain_name }}/api/admin
 
 django:
-  image: 'gcr.io/graphql-django-apollo-starter/server'
+  image: '{{ cookiecutter.docker_registry_path }}/server'
   replicas: 1
   readinessPath: /api/admin
   livenessPath: /api/admin

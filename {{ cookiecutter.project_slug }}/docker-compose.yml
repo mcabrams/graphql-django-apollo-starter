@@ -56,7 +56,7 @@ services:
   celery:
     build:
       context: ./server
-    command: celery -A doppelganger worker -l info
+    command: celery -A {{ cookiecutter.project_slug }} worker -l info
     volumes:
       - ./server:/app
     depends_on:
