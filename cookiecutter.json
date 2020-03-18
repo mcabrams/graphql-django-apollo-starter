@@ -1,5 +1,5 @@
 {
-  "project_name": "Grapqhl Django Apollo Starter",
+  "project_name": "Graphql Django Apollo Starter",
   "project_slug": "{{ cookiecutter.project_name.lower()|replace(' ', '_')|replace('-', '_')|replace('.', '_')|trim() }}",
   "local_domain_name": "graphql-django-apollo-starter.local",
   "domain_name": "graphql-django-apollo-starter.club",
