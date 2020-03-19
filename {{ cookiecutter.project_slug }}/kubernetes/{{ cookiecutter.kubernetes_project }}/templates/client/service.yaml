@@ -1,0 +1,16 @@
+{% raw %}
+kind: Service
+apiVersion: v1
+metadata:
+  name: client-service
+  labels:
+    stage: {{ .Values.stage }}
+spec:
+  selector:
+    app: client
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80
+  type: NodePort
+{% endraw %}

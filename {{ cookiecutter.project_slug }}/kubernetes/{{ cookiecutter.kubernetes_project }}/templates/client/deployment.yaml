@@ -1,0 +1,111 @@
+{% raw %}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: client
+  labels:
+    app: client
+    stage: {{ .Values.stage }}
+spec:
+  replicas: {{ .Values.client.replicas }}
+  selector:
+    matchLabels:
+      app: client
+      stage: {{ .Values.stage }}
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: client
+        stage: {{ .Values.stage }}
+    spec:
+      initContainers:
+        # This init container builds the assets and moves vital directories and
+        # files to an intermediate storage volume for use in the main container.
+        - name: client-build
+          image: {{ include "doppelganger.client.image" . }}
+          imagePullPolicy: Always
+          command:
+            - /bin/bash
+            - -c
+            - |
+              echo "Displaying schema volume contents..." && ls -al /schema/ &&
+              echo "Copying schema..." && cp /schema/schema.json /app/schema/ &&
+              echo "Building assets..." && npm run build &&
+              echo "Making build dir in build dir..." && rm -rf /build/build && mkdir /build/build &&
+              echo "Copying build assets to build dir..." && cp -a /app/build/. /build/build &&
+              echo "Copying nginx conf to build dir..." && cp /app/nginx.conf /build &&
+              echo "Copying env.sh to build dir..." && cp /app/env.sh /build
+          volumeMounts:
+            - mountPath: /schema
+              name: schema-disk
+            - mountPath: /build
+              name: build-temporary-volume
+      containers:
+        # This container generates the environment config and then serves the
+        # assets via nginx
+        - name: client
+          image: nginx:1.17
+          command:
+            - /bin/bash
+            - -c
+            - |
+              echo "Copying env.sh from build dir..." && cp /build/env.sh . &&
+              echo "Giving env.sh permissions..." && chmod +x ./env.sh &&
+              echo "Making src/generated/ folder..." && mkdir src && mkdir src/generated &&
+              echo "Creating .env file..." && echo "SENTRY_DSN=foo" > .env &&
+              echo "API_SERVER_URL=foo" >> .env &&
+              echo "API_GRAPHQL_SERVER_URL=foo" >> .env &&
+              echo "API_CSRFTOKEN_URL=foo" >> .env &&
+              echo "Creating env-config.js..." && ./env.sh &&
+              echo "Making public folder..." && mkdir /usr/share/nginx/html/public &&
+              echo "Copying env-config.js..." && cp ./src/generated/env-config.js /usr/share/nginx/html/public &&
+              echo "Copying build assets.." && cp -a /build/build/. /usr/share/nginx/html &&
+              echo "Copying nginx conf.." && cp -a /build/nginx.conf /etc/nginx/conf.d/default.conf &&
+              echo "Starting nginx..." && nginx -g 'daemon off;'
+          env:
+            - name: SENTRY_DSN
+              value: {{ .Values.sentryDsn }}
+            - name: API_SERVER_URL
+              value: {{ .Values.client.apiServerUrl }}
+            - name: API_GRAPHQL_SERVER_URL
+              value: {{ .Values.client.apiGraphqlServerUrl }}
+            - name: API_CSRFTOKEN_URL
+              value: {{ .Values.client.apiCsrftokenUrl }}
+          volumeMounts:
+            - mountPath: /build
+              name: build-temporary-volume
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: {{ .Values.client.livenessPath }}
+              port: http
+              httpHeaders:
+                - name: Host
+                  value: {{ .Values.host }}
+            initialDelaySeconds: 20
+            periodSeconds: 20
+            failureThreshold: 6
+          readinessProbe:
+            httpGet:
+              path: {{ .Values.client.readinessPath }}
+              port: http
+              httpHeaders:
+                - name: Host
+                  value: {{ .Values.host }}
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            failureThreshold: 12
+      volumes:
+        - name: build-temporary-volume
+          emptyDir: {}
+        - name: schema-disk
+          persistentVolumeClaim:
+            claimName: schema-disk
+      imagePullSecrets:
+        - name: gcr-json-key
+{% endraw %}

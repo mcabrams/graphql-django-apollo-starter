@@ -1,10 +1,6 @@
 # {{ cookiecutter.project_name }}
 [![Project Board](https://img.shields.io/badge/project%20board-%20-green.svg)](https://github.com/mcabrams/graphql-django-apollo-starter/projects/1)
 
-This repository picks up where I left off in my previous repository: https://github.com/mcabrams/doppelganger.
-
-> While this repository is not yet in template form (see https://github.com/mcabrams/graphql-django-apollo-starter/issues/66), it is intended to be a starting point for new projects using a stack of Django (Python), PostgresQL, GraphQL, React, Apollo, Redux - leveraging kubernetes as well as docker compose.
-
 ## Starting a new project based off this
 
 - Fork a new repo based off of this.
@@ -181,12 +177,12 @@ secrets.  Enter the following secrets in github:
       you'll probably want to create a new service account with role storage admin
       and name of something like github-storage-admin -
       download the json file and copy output from `cat
-      ~/Downloads/graphql-django-apollo-starter-e114e5df1222.json | base64` -
+      ~/Downloads/{{ cookiecutter.kubernetes_project }}-e114e5df1222.json | base64` -
       you'll need to replace that filename with one you downloaded)
 
 - `GCP_SA_EMAIL`
   - Use your client email associated with the key you generated. You could run
-  `cat ~/Downloads/graphql-django-apollo-starter-e114e5df1222.json` (remember
+  `cat ~/Downloads/{{ cookiecutter.kubernetes_project }}-e114e5df1222.json` (remember
   to change file name as usual) and look for client_email entry to see it.
 
 You can run
@@ -212,7 +208,7 @@ kubectl get services -o wide -w nginx-ingress-controller
 (you should see a load balancer with that IP listed in the digital ocean dropdown).
 
 You'll want to create records for staging and production appropriately.
-You can use that same ip for other A records (for example: staging.graphql-django-apollo-starter.club)
+You can use that same ip for other A records (for example: {{ cookiecutter.staging_domain_name }})
 
 ## Notes
 - TBD

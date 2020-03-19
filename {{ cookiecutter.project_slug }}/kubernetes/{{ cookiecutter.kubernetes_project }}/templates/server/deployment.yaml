@@ -1,0 +1,76 @@
+{% raw %}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: server
+  labels:
+    app: server
+    stage: {{ .Values.stage }}
+spec:
+  replicas: {{ .Values.django.replicas }}
+  selector:
+    matchLabels:
+      app: server
+      stage: {{ .Values.stage }}
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        stage: {{ .Values.stage }}
+        app: server
+    spec:
+      # This init container allows us to prepopulate the schema volume with the
+      # correct schema. This in turn is used by the client to create it's auto-
+      # generated code dependent on the graphql schema.
+      initContainers:
+        - name: load-schema
+          image: {{ include "doppelganger.django.image" . }}
+          imagePullPolicy: Always
+          command:
+            - /bin/bash
+            - -c
+            - |
+              echo "Generating schema..." && ./manage.py graphql_schema &&
+              echo "Copying schema to volume..." && cp schema/schema.json /schema
+          volumeMounts:
+            - mountPath: /schema
+              name: schema-disk
+          {{- include "doppelganger.djangoStandardEnv" . | nindent 10 }}
+
+      containers:
+        - name: server
+          image: {{ include "doppelganger.django.image" . }}
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 8000
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: {{ .Values.django.livenessPath }}
+              port: http
+              httpHeaders:
+                - name: Host
+                  value: {{ .Values.host }}
+            initialDelaySeconds: 20
+            periodSeconds: 20
+            failureThreshold: 6
+          readinessProbe:
+            httpGet:
+              path: {{ .Values.django.readinessPath }}
+              port: http
+              httpHeaders:
+                - name: Host
+                  value: {{ .Values.host }}
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            failureThreshold: 12
+          {{- include "doppelganger.djangoStandardEnv" . | nindent 10 }}
+      volumes:
+        - name: schema-disk
+          persistentVolumeClaim:
+            claimName: schema-disk
+      imagePullSecrets:
+        - name: gcr-json-key
+{% endraw %}
