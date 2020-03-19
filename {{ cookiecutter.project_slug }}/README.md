@@ -103,7 +103,7 @@ file.  Move this to the root repository directory and name it
 
 ```sh
 ./dev-kube-quickstart.sh
-kubectl get -n {{ cookiecutter.project_slug }} ingresses.extensions -w
+kubectl get -n {{ cookiecutter.kubernetes_project }} ingresses.extensions -w
 ```
 
 Once address is populated, add it to your `/etc/hosts`

@@ -1,1 +1,7 @@
-{{ cookiecutter.project_slug }}/renovate.json
+{
+  "extends": [
+    "config:base",
+    ":pinAllExceptPeerDependencies"
+  ],
+  "timezone": "America/Los_Angeles"
+}
