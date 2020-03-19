@@ -7,8 +7,8 @@ canary:
   description: 'Canary'
   payload:
     value_files:
-      - "./environment_config/production.values.yaml"
-      - "./environment_config/_common.values.yaml"
+      - "./graphql_django_apollo_starter/environment_config/production.values.yaml"
+      - "./graphql_django_apollo_starter/environment_config/_common.values.yaml"
     release: {{ cookiecutter.kubernetes_production_namespace }}
     namespace: {{ cookiecutter.kubernetes_production_namespace }}
     track: canary
@@ -25,8 +25,8 @@ production:
   description: 'Production'
   payload:
     value_files:
-      - "./environment_config/production.values.yaml"
-      - "./environment_config/_common.values.yaml"
+      - "./graphql_django_apollo_starter/environment_config/production.values.yaml"
+      - "./graphql_django_apollo_starter/environment_config/_common.values.yaml"
     # Remove the canary deployment if it exists when doing a full prod deploy.
     remove_canary: true
     release: {{ cookiecutter.kubernetes_production_namespace }}
@@ -43,8 +43,8 @@ staging:
   description: 'Staging'
   payload:
     value_files:
-      - "./environment_config/staging.values.yaml"
-      - "./environment_config/_common.values.yaml"
+      - "./graphql_django_apollo_starter/environment_config/staging.values.yaml"
+      - "./graphql_django_apollo_starter/environment_config/_common.values.yaml"
     release: {{ cookiecutter.kubernetes_staging_namespace }}
     namespace: {{ cookiecutter.kubernetes_staging_namespace }}
     track: stable
@@ -64,8 +64,8 @@ review:
   description: 'Review'
   payload:
     value_files:
-      - "./environment_config/review.values.yaml"
-      - "./environment_config/_common.values.yaml"
+      - "./graphql_django_apollo_starter/environment_config/review.values.yaml"
+      - "./graphql_django_apollo_starter/environment_config/_common.values.yaml"
     release: review-doppelganger-${{ pr }}
     namespace: review-doppelganger-${{ pr }}
     track: stable
