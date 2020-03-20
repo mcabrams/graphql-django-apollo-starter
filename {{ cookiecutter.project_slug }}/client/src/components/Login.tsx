@@ -40,8 +40,7 @@ export const Login: React.FC<LoginProps> = ({ navigate }) => {
     <Form
       labelCol={itemLayout.labelCol}
       wrapperCol={itemLayout.wrapperCol}
-      onFinish={e => {
-        e.preventDefault();
+      onFinish={() => {
         tokenAuth();
       }}
     >

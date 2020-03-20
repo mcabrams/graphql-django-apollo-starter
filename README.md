@@ -49,3 +49,14 @@ Answer the prompts with your own desired options. Here's an explanation of each.
 
 ### Dependencies
 - `sentry_dsn`: You'll want to set up a sentry account and copy your sentry dsn value here, it will look like: "https://19d74ebe3b174d379fbcb96310129b6b@sentry.io/1827306",
+
+
+## Developing this Cookiecutter
+
+You may find it useful to run
+
+```sh
+./dev-quickstart.sh
+```
+
+in order to get an example of the current cookiecutter w/ defaults locally.

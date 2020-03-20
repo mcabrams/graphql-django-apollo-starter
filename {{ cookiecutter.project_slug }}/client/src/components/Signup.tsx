@@ -59,8 +59,7 @@ export const Signup: React.FC<RouteComponentProps<SignupFormProps>> = (
   return (
     <Form
       layout="horizontal"
-      onSubmit={e => {
-        e.preventDefault();
+      onFinish={() => {
         createUser();
       }}
       labelCol={itemLayout.labelCol}
