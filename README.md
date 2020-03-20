@@ -19,12 +19,16 @@ Answer the prompts with your own desired options. Here's an explanation of each.
 
 ### General options
 - `project_name`: A concise name of your project
-- `github_repository`: i.e. mcabrams/graphql-django-apollo-starter
 - `project_slug`: You can probably keep this as the default, it will be used for the django project name and be an underscore cased version of project name.
 - `kubernetes_project`: I.e. "doppelganger"
 - `kubernetes_base_namespace`: **Use Default**
 - `kubernetes_staging_namespace`: **Use Default**
 - `kubernetes_production_namespace`: **Use Default**
+
+### Github
+> Prior to entering these, you'll want to create an empty github repo
+
+- `github_repository`: i.e. mcabrams/graphql-django-apollo-starter
 
 ### Domain names
 > Prior to entering these, you'll want to decide on your domain names, and probably go and purchase them.
