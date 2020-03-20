@@ -31,17 +31,11 @@ Open localhost:8080 in your browser.
 
 ## Development Host Side Notes
 
-If you want things like linting and typechecking to work on the host side,
-feel free to run `npm install` from host (in `server/` or `client/`) directory
-on the host.  It will generate node_modules, presumably identical to inside the
-server container, and won't overwrite those through skaffold nor docker
-compose.
+Running `docker-compose up -d` starts the client in watch mode, so updates you make will not require building assets manually.
 
-Additionally, when developing for the client, you'll want to run
-`npm run generate` or `npm run generate:watch` on the host from the `client`
-directory to ensure that you can see the generated graphql-codegen files (which
-are excluded from syncing to host via use of a named volume).
+When developing for the client, you'll want to run `npm run generate` or `npm run generate:watch` on the host from the `client` directory to ensure that you can see the generated graphql-codegen files (which are excluded from syncing to host via use of a named volume).
 
+Additionally, if you want things like linting and typechecking to work on the host side, feel free to run `npm install` from host (in `server/` or `client/`) directory on the host.  It will generate node_modules, presumably identical to inside the server container, and won't overwrite those through skaffold nor docker compose.
 
 ## Running Tests
 For tests, you'll want to use docker compose to build and run the test docker-compose
