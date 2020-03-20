@@ -12,7 +12,8 @@
   "kubernetes_base_namespace": "{{ cookiecutter.kubernetes_project }}",
   "kubernetes_staging_namespace": "staging-{{ cookiecutter.kubernetes_project }}",
   "kubernetes_production_namespace": "production-{{ cookiecutter.kubernetes_project }}",
+  "sentry_dsn": "https://19d74ebe7b174d399ebcb96320129b6b@sentry.io/1827306",
   "_copy_without_render": [
-          "*.tsx"
-      ]
+    "*.tsx"
+  ]
 }

@@ -1,22 +1,7 @@
 # {{ cookiecutter.project_name }}
-[![Project Board](https://img.shields.io/badge/project%20board-%20-green.svg)](https://github.com/mcabrams/graphql-django-apollo-starter/projects/1)
+[![Project Board](https://img.shields.io/badge/project%20board-%20-green.svg)](https://github.com/{{ cookiecutter.github_repository }}/projects/1)
 
-## Starting a new project based off this
-
-- Fork a new repo based off of this.
-- Create a new google cloud project with your new app name.
-- Create a new service account for the google cloud project, and generate a new
-json key file, follow steps here (roughly):
-  - https://blog.container-solutions.com/using-google-container-registry-with-kubernetes
-  - http://docs.heptio.com/content/private-registries/pr-gcr.html
-  - Rename the file to json-key-file.json and place in repo's root directory.
-- Create a new sentry project, and save dsn value.
-- Copy .env.example in root directory and in client directory to .env in
-respective directories and set SENTRY_DSN value to dsn value saved above.
-- Setup following secrets in github repo's secrets:
-    - Keys will be:
-      - SENTRY_DSN
-- Enable renovatebot
+> Created from [graphql-django-apollo-starter](https://github.com/mcabrams/graphql-django-apollo-starter)
 
 ## Development Setup
 

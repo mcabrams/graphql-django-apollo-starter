@@ -5,7 +5,7 @@
 # Global settings
 host: {{ cookiecutter.domain_name }}
 stage: production
-sentryDsn: https://19d74ebe7b174d399ebcb96320129b6b@sentry.io/1827306
+sentryDsn: {{ cookiecutter.sentry_dsn }}
 
 # Can set this to relevant value based on k8s cloud provider's storage class
 # i.e. do-block-storage for digital ocean
