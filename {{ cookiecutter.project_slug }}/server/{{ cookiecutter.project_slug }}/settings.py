@@ -214,3 +214,5 @@ GRAPHQL_JWT = {
     'JWT_REFRESH_EXPIRATION_DELTA': timedelta(days=7),
     'JWT_REFRESH_TOKEN_COOKIE_NAME': 'JWT-refresh-token',
 }
+
+GIT_SHA = env('GIT_SHA')
