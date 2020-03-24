@@ -41,7 +41,6 @@ services:
       - ./server/.env
     environment:
       - SENTRY_DSN=${SENTRY_DSN}
-      - GIT_SHA='0123456789'
     tty: true
     stdin_open: true
     ports:

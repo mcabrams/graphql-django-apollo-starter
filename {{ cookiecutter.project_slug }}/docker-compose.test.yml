@@ -50,7 +50,6 @@ services:
       DJANGO_CORS_ORIGIN_WHITELIST: http://localhost:8081,http://client-test:8080
       DJANGO_TRUSTED_ORIGINS: http://localhost:8081,http://client-test:8080
       DJANGO_DISABLE_CSRF: 'True'
-      GIT_SHA: '0123456789'
     tty: true
     stdin_open: true
     ports:
