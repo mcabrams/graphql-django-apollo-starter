@@ -66,6 +66,9 @@ spec:
             initialDelaySeconds: 10
             periodSeconds: 10
             failureThreshold: 12
+          env:
+            - name: GIT_SHA
+              value: {{ .Values.gitSha }}
           {{- include "doppelganger.djangoStandardEnv" . | nindent 10 }}
       volumes:
         - name: schema-disk

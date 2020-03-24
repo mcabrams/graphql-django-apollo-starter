@@ -1,5 +1,5 @@
 import { Form, Input, Button } from 'antd';
-import { FormComponentProps } from 'antd/es/form';
+import { FormProps } from 'antd/es/form';
 import React, { useState } from 'react';
 import { RouteComponentProps } from '@reach/router';
 
@@ -7,7 +7,7 @@ import { useIsLoggedIn } from '@src/hooks/useIsLoggedIn';
 import { useTokenAuthMutation } from '@src/generated/graphql';
 import { useRedirectIfLoggedIn } from '@src/hooks/useRedirectIfLoggedIn';
 
-interface LoginFormProps extends FormComponentProps {
+interface LoginFormProps extends FormProps {
   password: string;
   email: string;
 }

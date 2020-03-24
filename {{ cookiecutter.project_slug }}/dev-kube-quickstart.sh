@@ -17,4 +17,4 @@ helm repo add stable https://kubernetes-charts.storage.googleapis.com/
 helm repo update
 helm dependency update ./kubernetes/{{ cookiecutter.kubernetes_project }}
 helm install stable/nfs-server-provisioner --generate-name --version 0.4.0
-helm install {{ cookiecutter.kubernetes_project }} ./kubernetes/{{ cookiecutter.kubernetes_project }} --namespace={{ cookiecutter.kubernetes_project }}
+helm install {{ cookiecutter.kubernetes_project }} ./kubernetes/{{ cookiecutter.kubernetes_project }} --namespace={{ cookiecutter.kubernetes_project }} --set gitSha="$(git rev-parse HEAD)"
