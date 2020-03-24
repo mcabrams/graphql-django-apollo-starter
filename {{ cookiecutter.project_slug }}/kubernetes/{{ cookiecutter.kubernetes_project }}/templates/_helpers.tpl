@@ -74,6 +74,8 @@ env:
     value: {{ "{{" }} .Values.sentryDsn {{ "}}" }}
   - name: REDIS_URL
     value: redis://:{{ "{{" }} .Values.redis.password {{ "}}" }}@{{ cookiecutter.kubernetes_project }}-redis-master:6379/0
+  - name: GIT_SHA
+    value: {{ "{{" }} .Values.gitSha {{ "}}" }}
   - name: DATABASE_URL
     valueFrom:
       secretKeyRef:
