@@ -10,9 +10,9 @@ services:
     volumes:
       - ./client:/app
       - /app/node_modules
-      - ./server/schema:/app/schema # Need to keep schema up to date based off of server
       - /app/build
       - /app/public
+      - schema-test:/app/schema # Need to keep schema up to date based off of server
       - /app/src/generated/  # Don't want to overwrite what's generated via
                              # the non-test environment.
     depends_on:
@@ -41,8 +41,7 @@ services:
       - redis
     volumes:
       - ./server:/app
-      - /app/schema/  # Don't want to overwrite what's generated via
-                      # the non-test environment.
+      - schema-test:/app/schema # Need to keep schema up to date based off of server
     env_file:
       - ./server/.env
     environment:
@@ -51,6 +50,7 @@ services:
       DJANGO_CORS_ORIGIN_WHITELIST: http://localhost:8081,http://client-test:8080
       DJANGO_TRUSTED_ORIGINS: http://localhost:8081,http://client-test:8080
       DJANGO_DISABLE_CSRF: 'True'
+      GIT_SHA: '0123456789'
     tty: true
     stdin_open: true
     ports:
@@ -67,3 +67,6 @@ services:
     working_dir: /e2e
     volumes:
       - ./e2e:/e2e
+
+volumes:
+  schema-test:

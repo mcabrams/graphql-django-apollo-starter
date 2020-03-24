@@ -9,4 +9,5 @@ cd graphql_django_apollo_starter
 cp client/.env.example  client/.env
 cp .env.example  .env
 docker-compose down -v; docker-compose build; docker-compose up -d
+cd client
 npm install
