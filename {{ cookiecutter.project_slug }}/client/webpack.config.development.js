@@ -60,4 +60,9 @@ module.exports = {
     // to work
     disableHostCheck: true,
   },
+  watchOptions: {
+    ignored: /node_modules/,
+    aggregateTimeout: 300,
+    poll: 500,
+  },
 };
