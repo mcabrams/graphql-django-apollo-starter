@@ -154,7 +154,7 @@ secrets.  Enter the following secrets in github:
   - (Create from
       https://console.cloud.google.com/apis/credentials/serviceaccountkey,
       you'll probably want to create a new service account with role storage admin
-      and name of something like github-storage-admin -
+      and name of something like github-storage-admin, and give it Storage Admin role permissions -
       download the json file and copy output from `cat
       ~/Downloads/{{ cookiecutter.kubernetes_project }}-e114e5df1222.json | base64` -
       you'll need to replace that filename with one you downloaded)
