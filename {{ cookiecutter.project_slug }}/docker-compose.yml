@@ -79,7 +79,7 @@ services:
         - redis
 
   database:
-    image: 'postgres:10.11'
+    image: 'postgres:10.16'
     ports:
       - 5432:5432
     environment:
