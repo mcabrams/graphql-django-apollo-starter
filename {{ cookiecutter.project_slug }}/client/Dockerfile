@@ -1,5 +1,5 @@
 # Stage 0, "build-stage", based on Node.js, to build and compile the frontend
-FROM node:10-alpine as build-stage
+FROM node:10.24.1-alpine as build-stage
 RUN apk add --no-cache bash
 WORKDIR /app
 COPY ./client/package*.json /app/
